@@ -21,7 +21,21 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_admin'
     ];
+
+     public function conversations()
+    {
+        return $this->belongsToMany(Conversation::class, 'conversation_user')
+                    ->withTimestamps()
+                    ->latest('updated_at');
+    }
+
+public function messages()
+{
+    return $this->hasMany(Message::class);
+}
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -41,5 +55,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'is_admin' => 'boolean',
     ];
+
+
+
 }

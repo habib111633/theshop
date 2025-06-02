@@ -33,7 +33,28 @@
                     </div>
                 @endif
             </li>
+            <li class="relative">
+    <a href="{{ route('users.index') }}"
+        class="flex items-center p-2 rounded hover:bg-gray-100 {{ request()->routeIs('users.*') ? 'bg-gray-100 font-medium' : '' }} text-gray-700">
+        Users
+    </a>
+    @if (request()->routeIs('users.*'))
+        <div class="bg-white shadow-md rounded w-48 text-sm z-10 mt-2">
+            <a href="{{ route('users.create') }}"
+                class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Create User</a>
+            <a href="{{ route('users.index') }}"
+                class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Manage Users</a>
+        </div>
+    @endif
+</li>
 
+  <li class="relative">
+    <a href="{{ route('conversations.index') }} "
+        class="flex items-center p-2 rounded hover:bg-gray-100 text-gray-700">
+        Messages
+    </a>
+
+</li>
 
             <!-- Add more navigation items as needed -->
         </ul>
