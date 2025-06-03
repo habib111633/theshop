@@ -1,5 +1,5 @@
-<aside class="w-64 fixed h-screen bg-white shadow-md">
-    <div class="p-4 border-b">
+<aside class="w-64 h-full bg-white shadow-md">
+        <div class="p-4 border-b">
         <h2 class="text-xl font-semibold text-gray-800">Navigation</h2>
     </div>
     <nav class="p-4 ">

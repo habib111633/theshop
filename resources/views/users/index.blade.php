@@ -1,9 +1,5 @@
 	<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
+
 
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -35,8 +31,7 @@
                                         <td class="border border-gray-300 px-6 py-4">{{ $user->email }}</td>
                                         <td class="border border-gray-300 px-6 py-4 w-36 flex gap-2">
                                             <a href="{{ route('users.edit', $user) }}"
-                                                class="px-4 py-2 text-sm font-medium text-white  rounded-lg btn-edit transition">
-                                                Edit
+                                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 flex items-center justify-center">                                                Edit
                                             </a>
                                             <form action="{{ route('users.destroy', $user) }}" method="POST">
                                                 @csrf

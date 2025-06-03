@@ -59,5 +59,11 @@ Route::middleware(['auth'])->group(function () {
 //     return 'Test mail sent!';
 // });
 
+Route::get('/test-job1', function () {
+    \App\Jobs\TestJob::dispatch();
+
+    return 'Job has been dispatched! now check your logs to see if it was processed successfully.';
+});
+
 
 require __DIR__ . '/auth.php';

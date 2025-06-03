@@ -1,9 +1,4 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Messages') }}
-        </h2>
-    </x-slot>
 
     <div class="py-8">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
@@ -32,7 +27,7 @@
                     </div>
 
                     <!-- Messages Container -->
-                    <div class="space-y-4 mb-6 h-[400px] overflow-y-auto px-2">
+                    <div id ="message-container" class="space-y-4 mb-6 h-[400px] overflow-y-auto px-2">
                         @foreach ($messages as $message)
                             <div class="flex @if ($message->user_id == Auth::id()) justify-end @endif">
                                 <div
@@ -74,4 +69,10 @@
             </div>
         </div>
     </div>
+    <script>
+    window.addEventListener('DOMContentLoaded', function() {
+        const messageContainer = document.getElementById('message-container');
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+    });
+    </script>
 </x-app-layout>

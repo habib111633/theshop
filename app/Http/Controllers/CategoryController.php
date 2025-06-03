@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 
 class CategoryController extends Controller
 {
@@ -13,6 +15,11 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
+// $a = DB::table('users')
+//     ->select('id', 'name', 'password')
+//     ->get();
+// dd($a->pluck('name', 'password'));
+
         return view('categories.index', compact('categories'));
 
     }

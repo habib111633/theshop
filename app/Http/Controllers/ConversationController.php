@@ -1,16 +1,20 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\Conversation;
 use App\Models\User;
+
+use App\Models\Conversation;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\MessageNotification;
+
 
 class ConversationController extends Controller
 {
     public function index()
     {
-        // dd(Auth::user());
+        // Fetch conversations for the authenticated user
         $conversations = Auth::user()->conversations()
             ->with(['users', 'messages' => function ($query) {
                 $query->latest()->limit(1);
@@ -77,10 +81,11 @@ class ConversationController extends Controller
         $conversation->touch();
         // Notify other users in the conversation
         // Notify the recipient(s)
-        // $recipient = $conversation->users()->where('users.id', '!=', Auth::id())->first();
-        // if ($recipient) {
-        //     $recipient->notify(new MessageNotification($message));
-        // }
+$recipient = $conversation->users()->where('users.id', '!=', Auth::id())->first();
+if ($recipient) {
+    $recipient->notify(new MessageNotification($message));
+}
+
         return back()->with('success', 'Message sent!');
     }
 
