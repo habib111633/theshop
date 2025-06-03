@@ -14,11 +14,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
-// $a = DB::table('users')
-//     ->select('id', 'name', 'password')
-//     ->get();
-// dd($a->pluck('name', 'password'));
+$categories = Category::all();
+
 
         return view('categories.index', compact('categories'));
 
