@@ -74,7 +74,7 @@ return view('products.show', compact('product'));
     {
         //
 $categories = Category::all();
-return view('products.edit', compact('product', 'categories'));
+return view('products.create', compact('product', 'categories'));
 
     }
 

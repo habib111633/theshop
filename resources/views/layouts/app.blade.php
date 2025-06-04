@@ -204,9 +204,26 @@
 }
 
 </style>
+<style>
+    .loader {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #3498db;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+    .animate-spin {
+  animation: spin 1s linear infinite;
+}
+    </style>
 
 </head>
-
+ 
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-100">
         @include('layouts.navigation')
@@ -233,6 +250,38 @@
             </div>
         </div>
     </div>
+    <!-- Preloader -->
+<!-- Preloader -->
+<div id="preloader" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;background:white;display:flex;align-items:center;justify-content:center;flex-direction:column;">
+    <!-- Optional: Your logo -->
+                        {{-- <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" /> --}}
+    <!-- Animated SVG spinner -->
+    <svg class="animate-spin" width="50" height="50" viewBox="0 0 50 50">
+        <circle class="opacity-25" cx="25" cy="25" r="20" stroke="#3498db" stroke-width="5" fill="none"/>
+        <circle class="opacity-75" cx="25" cy="25" r="20" stroke="#3498db" stroke-width="5" fill="none"
+            stroke-dasharray="31.4 31.4" stroke-linecap="round"/>
+    </svg>
+    <span style="margin-top:16px;color:#3498db;font-weight:500;">Loading, please wait...</span>
+</div>
+<script>
+    window.addEventListener('load', function() {
+        document.getElementById('preloader').style.display = 'none';
+    });
+</script>
 </body>
+ <!-- After your table -->
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+ 
+ <script>
+     $(document).ready(function() {
+         $('table').DataTable({
+             responsive: true, // Optional: for mobile-friendly tables
+             columnDefs: [
+                 { orderable: false, targets: [3] } // Disable sorting for Actions column
+             ]
+         });
+     });
+ </script>
 
 </html>

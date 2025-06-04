@@ -29,7 +29,7 @@
                                         <td class="border border-gray-300 px-6 py-4">{{ $user->id }}</td>
                                         <td class="border border-gray-300 px-6 py-4">{{ $user->name }}</td>
                                         <td class="border border-gray-300 px-6 py-4">{{ $user->email }}</td>
-                                        <td class="border border-gray-300 px-6 py-4 w-36 flex gap-2">
+                                        <td class="border border-gray-300 px-6 py-4 flex gap-2">
                                             <a href="{{ route('users.edit', $user) }}"
                                             class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 flex items-center justify-center">                                                Edit
                                             </a>
@@ -52,18 +52,5 @@
             </div>
         </div>
     </div>
-   <!-- After your table -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-
-<script>
-    $(document).ready(function() {
-        $('table').DataTable({
-            responsive: true, // Optional: for mobile-friendly tables
-            columnDefs: [
-                { orderable: false, targets: [3] } // Disable sorting for Actions column
-            ]
-        });
-    });
-</script>
+  
 </x-app-layout>
