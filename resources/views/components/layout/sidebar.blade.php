@@ -1,5 +1,5 @@
-<aside class="w-64 fixed h-screen bg-white shadow-md">
-    <div class="p-4 border-b">
+<aside class="w-64 h-full bg-white shadow-md">
+        <div class="p-4 border-b">
         <h2 class="text-xl font-semibold text-gray-800">Navigation</h2>
     </div>
     <nav class="p-4 ">
@@ -33,6 +33,21 @@
                     </div>
                 @endif
             </li>
+            <li class="relative">
+                <a href="{{ route('products.index') }}"
+                    class="flex items-center p-2 rounded hover:bg-gray-100 {{ request()->routeIs('products.*') ? 'bg-gray-100 font-medium' : '' }} text-gray-700">
+                    Products
+                </a>
+                @if (request()->routeIs('products.*'))
+                    <div class="bg-white shadow-md rounded w-48 text-sm z-10 mt-2">
+                        <a href="{{ route('products.create') }}"
+                            class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Create</a>
+                        <a href="{{ route('products.index') }}"
+                            class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Edit</a>
+                    </div>
+                @endif
+            </li>
+
             <li class="relative">
     <a href="{{ route('users.index') }}"
         class="flex items-center p-2 rounded hover:bg-gray-100 {{ request()->routeIs('users.*') ? 'bg-gray-100 font-medium' : '' }} text-gray-700">

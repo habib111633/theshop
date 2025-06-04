@@ -35,6 +35,14 @@ public function messages()
 {
     return $this->hasMany(Message::class);
 }
+public  function media()
+{
+    return $this->morphMany(Media::class, 'imageable');
+}
+public function products()
+{
+    return $this->hasMany(Product::class, 'user_id');
+}
 
 
     /**
