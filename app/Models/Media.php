@@ -10,6 +10,7 @@ class Media extends Model
     protected $fillable = [
         'url',
         'type',
+        'path',
         'imageable_id',
         'imageable_type', // Critical for polymorphic relation
     ];

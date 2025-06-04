@@ -3,16 +3,32 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use Illuminate\Http\Request;
+use App\Models\Category;
+use App\Services\ProductService;
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
+
 
 class ProductController extends Controller
 {
+
+    protected $ProductService;
+    public function __construct(ProductService $ProductService)
+    {
+        $this->ProductService = $ProductService;
+
+    }
     /**
      * Display a listing of the resource.
      */
+    
+    
     public function index()
     {
-        //
+$products = Product::all();
+
+return view('products.index', compact('products'));
+
     }
 
     /**
@@ -20,15 +36,25 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+$categories = Category::all();
+
+return view('products.create', compact('categories'));
+
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        //
+$product = $this->ProductService->createProduct(
+    $request->validated() + ['user_id' => auth()->id()],
+    $request->file('image')
+);
+
+return redirect()->route('products.index')
+    ->with('success', 'Product created!');
+
     }
 
     /**
@@ -37,6 +63,8 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         //
+return view('products.show', compact('product'));
+
     }
 
     /**
@@ -45,14 +73,26 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         //
+$categories = Category::all();
+return view('products.edit', compact('product', 'categories'));
+
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product)
     {
         //
+try {
+    $this->ProductService->updateProduct($product, $request->validated(), $request->file('image'));
+    return redirect()->route('products.index')
+        ->with('success', 'Product updated successfully!');
+} catch (\Exception $e) {
+    return redirect()->route('products.index')
+        ->with('error', 'Failed to update product: ' . $e->getMessage());
+}
+
     }
 
     /**
@@ -61,5 +101,13 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         //
+        try{
+            $this->ProductService->deleteProduct($product);
+            return redirect()->route('products.index')
+                ->with('success', 'Product deleted successfully!');
+        } catch (\Exception $e) {
+            return redirect()->route('products.index')
+                ->with('error', 'Failed to delete product: ' . $e->getMessage());
+        }
     }
 }

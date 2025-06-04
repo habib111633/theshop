@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
+use App\Http\Controllers\ProductController;
+
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ConversationController;
@@ -30,6 +32,10 @@ Route::get('/dashboard', function () {
 
 Route::resource('categories', CategoryController::class);
 Route::resource('users', UserController::class);
+Route::middleware(['auth'])->group(function () {
+    Route::resource('products', ProductController::class);
+});
+
 Route::get('/users/{user}/conversations', [UserController::class, 'conversations'])->name('users.conversations');
 Route::get('/users/{user}/conversations/{conversation}', [UserController::class, 'showConversation'])->name('users.conversation.show');
 Route::get('/users/{user}/conversations/{conversation}/messages', [UserController::class, 'showMessages'])->name('users.conversation.messages');
@@ -49,6 +55,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/conversations/{conversation}', [ConversationController::class, 'destroy'])->name('conversations.destroy');
 
 });
+
+
 
 // Route::get('/send-test-mail', function () {
 //     Mail::raw('This is a test email from Laravel using Mailtrap.', function ($message) {

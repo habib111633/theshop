@@ -14,7 +14,9 @@ class UserController extends Controller
     public function index()
     {
         //
-        $users = User::all();
+// User::where('id', '!=', Auth::id())->get();
+$users = User::where('id', '!=', auth()->id())->get();
+
         return view('users.index', compact('users'));
     }
 
@@ -98,5 +100,5 @@ class UserController extends Controller
 
     }
 
-   
+
 }
