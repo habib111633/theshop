@@ -73,5 +73,13 @@ Route::get('/test-job1', function () {
     return 'Job has been dispatched! now check your logs to see if it was processed successfully.';
 });
 
+Route::prefix('exports')->group(function () {
+    Route::get('/products', [\App\Http\Controllers\Export\ProductExportController::class, 'export'])
+        ->name('exports.products');
+
+    Route::get('/products/queued', [\App\Http\Controllers\Export\ProductExportController::class, 'exportQueued'])
+        ->name('exports.products.queued');
+});
+
 
 require __DIR__ . '/auth.php';

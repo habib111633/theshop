@@ -21,13 +21,15 @@ class ConversationController extends Controller
             }])
             ->latest('updated_at')
             ->get();
+        
 
         $users = User::where('id', '!=', Auth::id())->get();
 
         return view('conversations.index', compact('conversations', 'users'));
     }
-
-    public function show(Conversation $conversation)
+// With  Route model binding Laravel automatically fetch the
+// Conversation model from the database using the ID in the URL and give it to your controller method.
+public function show(Conversation $conversation)
     {
         $this->authorize('view', $conversation);
 
