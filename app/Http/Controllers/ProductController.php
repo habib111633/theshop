@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Services\ProductService;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use Symfony\Component\HttpFoundation\Request;
 
 
 class ProductController extends Controller
@@ -21,8 +22,8 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    
-    
+
+
     public function index()
     {
 $products = Product::all();
@@ -110,4 +111,24 @@ try {
                 ->with('error', 'Failed to delete product: ' . $e->getMessage());
         }
     }
+
+    public function shop()
+{
+    $products = Product::all();
+    $categories = Category::all(); // Fetch all categories
+    return view('shop', compact('products','categories'));
+}
+public function ajaxFilter(Request $request)
+{
+    $query = Product::with('media', 'category');
+
+    if ($request->has('categories')) {
+        $query->whereIn('category_id', $request->categories);
+    }
+
+    $products = $query->get();
+
+    // Return only the products grid partial
+    return view('partials.products-grid', compact('products'))->render();
+}
 }

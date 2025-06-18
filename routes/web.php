@@ -23,8 +23,23 @@ use App\Http\Controllers\ConversationController;
  */
 
 Route::get('/', function () {
-    return view('welcome');
-});
+return view('home');
+
+})->name('home');
+
+Route::get('/shop', [ProductController::class, 'shop'])->name('shop');
+
+Route::post('/shop/ajax', [ProductController::class, 'ajaxFilter'])->name('shop.ajax');
+Route::get('/checkout', function () {
+    return view('checkout');
+})->name('checkout');
+Route::get('/cart', function () {
+    return view('cart');
+})->name('cart');
+Route::get('/product-detail', function () {
+    return view('single-product-page');
+})->name('product-detail');
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
