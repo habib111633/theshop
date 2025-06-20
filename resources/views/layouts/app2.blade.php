@@ -82,41 +82,15 @@
                 <a href="{{ route('login')}}"
                     class="bg-[#ff0042] border border-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] font-semibold px-4 py-2 rounded-full inline-block">Login</a>
                 <div class="relative group cart-wrapper">
-                    <a href="/cart.html">
+                    <a href="{{ route('cart') }}">
                         <img src="{{ asset('images/cart-shopping.svg') }}" alt="Cart"
                             class="h-6 w-6 group-hover:scale-120">
+                        <span class="cart-count absolute -top-2 -right-2 bg-[#ff0042] text-white text-xs font-bold rounded-full px-2 py-0.5">{{ array_sum(array_column(session('cart', []), 'quantity')) }}</span>
                     </a>
                     <!-- Cart dropdown -->
-                    <div class="absolute right-0 mt-1 w-80 bg-white shadow-lg p-4 rounded hidden group-hover:block">
-                        <div class="space-y-4">
-                            <!-- product item -->
-                            <div class="flex items-center justify-between pb-4 border-b border-gray-line">
-                                <div class="flex items-center">
-                                    <img src="{{ asset('images/single-product/1.jpg') }}" alt="Product"
-                                        class="h-12 w-12 object-cover rounded mr-2">
-                                    <div>
-                                        <p class="font-semibold">Summer black dress</p>
-                                        <p class="text-sm">Quantity: 1</p>
-                                    </div>
-                                </div>
-                                <p class="font-semibold">$25.00</p>
-                            </div>
-                            <!-- product item -->
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <img src="{{ asset('images/single-product/2.jpg') }}" alt="Product"
-                                        class="h-12 w-12 object-cover rounded mr-2">
-                                    <div>
-                                        <p class="font-semibold">Black suit</p>
-                                        <p class="text-sm">Quantity: 1</p>
-                                    </div>
-                                </div>
-                                <p class="font-semibold">$125.00</p>
-                            </div>
-                        </div>
-                        <a href="/cart.html"
-                            class="block text-center mt-4 border border-[#ff0042] bg-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] py-2 rounded-full font-semibold">Go
-                            to Cart</a>
+                    <div
+                        class="absolute right-0 mt-1 w-80 bg-white shadow-lg p-4 rounded cart-dropdown hidden group-hover:block">
+                        @include('partials.cart-preview', ['cart' => session('cart', [])])
                     </div>
                 </div>
                 <a id="search-icon" href="javascript:void(0);" class="text-white hover:text-[#ff0042] group">
@@ -301,9 +275,66 @@
         </div>
     </footer>
 
-    <script src="node_modules/swiper/swiper-bundle.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    <script src="{{ asset('js/script.js') }}"></script>
+    <script>
+   document.querySelectorAll(".add-to-cart-btn").forEach((btn) => {
+    btn.addEventListener("click", function(e) {
+        e.preventDefault();
+        let productId = this.getAttribute("data-product-id");
+        let quantity = this.getAttribute("data-quantity") || 1;
+
+        // Show loading state
+        this.disabled = true;
+        this.innerHTML = '<span class="animate-spin">↻</span> Adding...';
+
+        fetch("{{ route('cart.add') }}", {
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                product_id: productId,
+                quantity: quantity
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Update cart preview HTML
+            if (data.preview) {
+                document.querySelector(".cart-dropdown").innerHTML = data.preview;
+
+                // Force show cart preview temporarily
+                document.querySelector(".cart-wrapper").classList.add("open");
+                setTimeout(() => {
+                    document.querySelector(".cart-wrapper").classList.remove("open");
+                }, 3000);
+            }
+
+            // Update cart count badge
+            if (data.count) {
+                document.querySelector(".cart-count").textContent = data.count;
+            }
+
+            // Show success message
+         })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Failed to add item to cart");
+        })
+        .finally(() => {
+            // Reset button state
+            this.disabled = false;
+            this.textContent = "Add to Cart";
+        });
+    });
+});
+    </script>
+    </script>
+    < script src="node_modules/swiper/swiper-bundle.js">
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+        <script src="{{ asset('js/script.js') }}"></script>
 
 </body>
 

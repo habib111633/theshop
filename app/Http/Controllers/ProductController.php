@@ -114,21 +114,42 @@ try {
 
     public function shop()
 {
-    $products = Product::all();
+$products = Product::with('media', 'category')->paginate(9);
+$products->withPath(route('shop.ajax')); // <-- Add this line
+
     $categories = Category::all(); // Fetch all categories
     return view('shop', compact('products','categories'));
 }
 public function ajaxFilter(Request $request)
 {
+
     $query = Product::with('media', 'category');
 
     if ($request->has('categories')) {
-        $query->whereIn('category_id', $request->categories);
+$query->whereIn('category_id', $request->input('categories', []));
+
     }
 
-    $products = $query->get();
+switch ($request->input('sort')) {
+    case 'az':
+        $query->orderBy('name', 'asc');
+        break;
+    case 'latest':
+    default:
+        $query->orderBy('created_at', 'desc');
+        break;
+}
 
-    // Return only the products grid partial
+$products = $query->paginate(9);
+
+// Add all current query parameters to pagination links
+$products->appends($request->except('page'));
+
+
     return view('partials.products-grid', compact('products'))->render();
+}
+public function publicDetail(Product $product)
+{
+    return view('single-product-page', compact('product'));
 }
 }

@@ -10,10 +10,7 @@
         <!-- Top Filter -->
         <div class="flex flex-col md:flex-row justify-between items-center py-4">
             <div class="flex items-center space-x-4">
-                <button
-                    class="bg-[#ff0042] hover:bg-transparent  text-white hover:text-[#ff0042] border border-[#ff0042] font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px] focus:outline-none">Show
-                    On
-                    Sale</button>
+
                 <button
                     class="bg-[#ff0042] hover:bg-transparent  text-white hover:text-[#ff0042] border border-[#ff0042] font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px] focus:outline-none">List
                     View</button>
@@ -23,11 +20,10 @@
             </div>
             <div class="flex mt-5 md:mt-0 space-x-4">
                 <div class="relative">
-                    <select
-                        class="block appearance-none w-full bg-white border  hover:border-[#ff0042] px-4 py-2 pr-8 rounded-full shadow leading-tight focus:outline-none focus:shadow-outline">
-                        <option>Sort by Latest</option>
-                        <option>Sort by Popularity</option>
-                        <option>Sort by A-Z</option>
+                    <select name="sort" id="sort-select"
+                        class="block appearance-none w-full bg-white border hover:border-[#ff0042] px-4 py-2 pr-8 rounded-full shadow leading-tight focus:outline-none focus:shadow-outline">
+                        <option value="latest">Sort by Latest</option>
+                        <option value="az">Sort by A-Z</option>
                     </select>
                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center justify-center px-2">
                         <img id="arrow-down" class="h-4 w-4" src="{{ asset('images/filter-down-arrow.svg') }}"
@@ -69,49 +65,10 @@
             <div class="w-full md:w-3/4 p-4">
                 <!-- Products grid -->
                 <div id="products-grid">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        @foreach ($products as $product)
-                        <div class="bg-white p-4 rounded-lg shadow">
-                            @if ($product->media->first())
-                            <img src="{{ asset('storage/' . $product->media->first()->path) }}" alt="Product 1"
-                                class="w-full object-cover mb-4 rounded-lg">
-                            @endif
-                            <a href="#" class="text-lg font-semibold mb-2">{{ $product->name }}</a>
-                            <p class=" my-2">{{ $product->category->name }}</p>
-                            <div class="flex items-center mb-4">
-                                <span
-                                    class="text-lg font-bold text-[#ff0042]">${{ number_format($product->price, 2) }}</span>
-                                <span class="text-sm  ml-2">{{ number_format($product->stock, 0) }} units</span>
-                            </div>
-                            <button
-                                class="bg-[#ff0042] hover:bg-transparent  text-white hover:text-[#ff0042] border border-[#ff0042] font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px]">Add
-                                to Cart</button>
-                        </div>
-                        @endforeach
-                    </div>
+                    @include('partials.products-grid', ['products' => $products])
+
                 </div>
-                <!-- Pagination -->
-                <div class="flex justify-center mt-8">
-                    <nav aria-label="Page navigation">
-                        <ul class="inline-flex space-x-2">
-                            <li>
-                                <a href="#"
-                                    class="bg-[#ff0042] text-white w-10 h-10 flex items-center justify-center rounded-full">1</a>
-                            </li>
-                            <li>
-                                <a href="#"
-                                    class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#ff0042] hover:text-white">2</a>
-                            </li>
-                            <li>
-                                <a href="#"
-                                    class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#ff0042] hover:text-white">3</a>
-                            </li>
-                            <li>
-                                <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full">Next</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
+
             </div>
         </div>
     </div>
@@ -137,24 +94,138 @@
         </div>
     </div>
 </section>
-<script>
-document.querySelectorAll('.category-checkbox').forEach(cb => {
-    cb.addEventListener('change', function() {
-        let form = document.getElementById('category-filter-form');
-        let formData = new FormData(form);
 
-        fetch("{{ route('shop.ajax') }}", {
-                method: "POST",
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: formData
-            })
-            .then(res => res.text())
-            .then(html => {
-                document.getElementById('products-grid').innerHTML = html;
-            });
-    });
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize event listeners
+    initializeEventListeners();
+
+    // Initial attachment of pagination events
+    attachPaginationEvents();
 });
+
+function initializeEventListeners() {
+    // Category checkboxes
+    document.querySelectorAll('.category-checkbox').forEach(cb => {
+        cb.addEventListener('change', () => sendFilterRequest());
+    });
+
+    // Sort select
+    document.getElementById('sort-select').addEventListener('change', () => sendFilterRequest());
+
+    // Mobile filter toggle
+    document.getElementById('products-toggle-filters')?.addEventListener('click', function() {
+        const filters = document.getElementById('filters');
+        filters.classList.toggle('hidden');
+        this.textContent = filters.classList.contains('hidden') ? 'Show Filters' : 'Hide Filters';
+    });
+
+    // Arrow toggle for select dropdown
+    document.getElementById('sort-select')?.addEventListener('focus', function() {
+        document.getElementById('arrow-down').classList.add('hidden');
+        document.getElementById('arrow-up').classList.remove('hidden');
+    });
+
+    document.getElementById('sort-select')?.addEventListener('blur', function() {
+        document.getElementById('arrow-down').classList.remove('hidden');
+        document.getElementById('arrow-up').classList.add('hidden');
+    });
+}
+
+function sendFilterRequest(url = null) {
+    // Show loading indicator (optional)
+    const productsGrid = document.getElementById('products-grid');
+    productsGrid.innerHTML = '<div class="text-center py-8">Loading products...</div>';
+
+    // Collect all filter parameters
+    const params = new URLSearchParams();
+    const formData = new FormData(document.getElementById('category-filter-form'));
+    const sortValue = document.getElementById('sort-select').value;
+
+    // Add categories to params
+    document.querySelectorAll('.category-checkbox:checked').forEach(cb => {
+        params.append('categories[]', cb.value);
+    });
+
+    // Add sort to params
+    params.append('sort', sortValue);
+
+    // Determine the request URL and method
+    let requestUrl, requestOptions;
+
+    if (url) {
+        // Pagination request - GET with all parameters
+        const urlObj = new URL(url);
+        const existingParams = new URLSearchParams(urlObj.search);
+
+        // Preserve existing parameters while updating with current filters
+        existingParams.set('sort', sortValue);
+        existingParams.delete('categories[]'); // Remove old category params
+
+        // Add current category filters
+        document.querySelectorAll('.category-checkbox:checked').forEach(cb => {
+            existingParams.append('categories[]', cb.value);
+        });
+
+        requestUrl = `${url.split('?')[0]}?${existingParams.toString()}`;
+        requestOptions = {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'text/html'
+            }
+        };
+    } else {
+        // Initial filter request - POST with FormData
+        requestUrl = "{{ route('shop.ajax') }}";
+        formData.append('sort', sortValue);
+        requestOptions = {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'text/html'
+            },
+            body: formData
+        };
+    }
+
+    // Make the fetch request
+    fetch(requestUrl, requestOptions)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(html => {
+            productsGrid.innerHTML = html;
+            attachPaginationEvents();
+
+            // Scroll to top of products grid (optional)
+            productsGrid.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            productsGrid.innerHTML = `
+    <div class="text-center py-8 text-red-500">
+        Error loading products. Please try again.
+    </div>
+    `;
+        });
+}
+
+function attachPaginationEvents() {
+    document.querySelectorAll('.pagination a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            sendFilterRequest(this.href);
+        });
+    });
+}
+</script>
 </script>
 @endsection

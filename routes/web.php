@@ -9,6 +9,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ConversationController;
+use App\Http\Controllers\CartController;
+
 
 
 /*
@@ -28,8 +30,11 @@ return view('home');
 })->name('home');
 
 Route::get('/shop', [ProductController::class, 'shop'])->name('shop');
+Route::match(['GET', 'POST'], '/shop/filter', [ProductController::class, 'ajaxFilter'])->name('shop.ajax');
 
-Route::post('/shop/ajax', [ProductController::class, 'ajaxFilter'])->name('shop.ajax');
+
+
+
 Route::get('/checkout', function () {
     return view('checkout');
 })->name('checkout');
@@ -39,6 +44,8 @@ Route::get('/cart', function () {
 Route::get('/product-detail', function () {
     return view('single-product-page');
 })->name('product-detail');
+Route::get('/product/{product}', [ProductController::class, 'publicDetail'])->name('product.detail');
+
 
 
 Route::get('/dashboard', function () {
@@ -71,7 +78,13 @@ Route::middleware(['auth'])->group(function () {
 
 });
 
-
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::get('/cart/preview', [CartController::class, 'preview'])->name('cart.preview');
+Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+Route::get('/cart', function () {
+    return view('cart');
+})->name('cart');
 
 // Route::get('/send-test-mail', function () {
 //     Mail::raw('This is a test email from Laravel using Mailtrap.', function ($message) {
