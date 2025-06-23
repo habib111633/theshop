@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('messages', function (Blueprint $table) {
@@ -19,17 +16,26 @@ return new class extends Migration
             $table->boolean('read')->default(false);
             $table->timestamps();
 
-            $table->foreign('conversation_id')->references('id')->on('conversations')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users');
-        });
+            $table->foreign('conversation_id')
+                  ->references('id')
+                  ->on('conversations')
+                  ->onDelete('cascade');
 
+            $table->foreign('user_id')
+                  ->references('id')
+                  ->on('users');
+        });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
+        // First remove foreign keys
+        Schema::table('messages', function (Blueprint $table) {
+            $table->dropForeign(['conversation_id']);
+            $table->dropForeign(['user_id']);
+        });
+
+        // Then drop the table
         Schema::dropIfExists('messages');
     }
 };

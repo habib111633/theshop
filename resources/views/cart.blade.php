@@ -22,7 +22,16 @@
                                 </tr>
                             </thead>
                             <tbody id="cart-items">
-                                @php $cart = session('cart', []); @endphp
+                                @php
+                                    $cart = session('cart', []);
+                                    $subtotal = 0;
+                                    foreach ($cart as $item) {
+                                        $subtotal += $item['price'] * $item['quantity'];
+                                    }
+                                    $tax = round($subtotal * 0.17, 2); // 17% tax
+                                    $shipping = 0.00;
+                                    $total = $subtotal + $tax + $shipping;
+                                @endphp
                                 @forelse($cart as $productId => $item)
                                 <tr data-product-id="{{ $productId }}" class="pb-4 border-b border-gray-line">
                                     <td class="px-1 py-4">
@@ -57,46 +66,18 @@
                                 @endforelse
                             </tbody>
                         </table>
-                        <div class="px-1 flex flex-col lg:flex-row justify-between items-center mt-10">
-                            <div class="flex items-center">
-                                <input type="text" placeholder="Coupon code"
-                                    class="border border-gray-300 rounded-l-full py-2 px-4 focus:outline-none">
-                                <button
-                                    class="bg-[#ff0042] text-white border border-[#ff0042] hover:bg-transparent hover:text-[#ff0042] rounded-r-full py-2 px-4">Apply
-                                    Coupon</button>
-                            </div>
-                            <div class="mt-4 lg:mt-0 flex space-x-2">
-                                <button
-                                    class="bg-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] border border-[#ff0042]  font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px] ">Empty
-                                    Cart</button>
-                                <button
-                                    class="bg-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] border border-[#ff0042]  font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px] ">Update
-                                    Cart</button>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
             </div>
             <div class="md:w-1/4">
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <h2 class="text-lg font-semibold mb-4">Summary</h2>
-                    <div class="flex justify-between mb-4">
-                        <p>Subtotal</p>
-                        <p>$19.99</p>
-                    </div>
-                    <div class="flex justify-between mb-4">
-                        <p>Taxes</p>
-                        <p>$1.99</p>
-                    </div>
-                    <div class="flex justify-between mb-4 pb-4 border-b border-gray-line">
-                        <p>Shipping</p>
-                        <p>$0.00</p>
-                    </div>
-                    <div class="flex justify-between mb-2">
-                        <p class="font-semibold">Total</p>
-                        <p class="font-semibold">$21.98</p>
-                    </div>
-                    <a href="/checkout"
+@include('partials.cart-summary', [
+    'cart' => session('cart', []),
+    'paymentEditable' => false,
+    'paymentMethod' => 'cod'
+])                    <a href="/checkout"
                         class="bg-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] border border-[#ff0042]  font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px]  w-full text-center block">Proceed
                         to checkout</a>
                 </div>
@@ -104,6 +85,8 @@
         </div>
     </div>
 </section>
+
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -124,6 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(res => res.json())
                 .then(data => {
                     row.remove();
+                    updateSummary();
                     // Update cart preview in header
                     if (document.querySelector('.cart-dropdown')) {
                         document.querySelector('.cart-dropdown').innerHTML = data.preview;
@@ -154,6 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             input.value = qty;
             updateCart(row.dataset.productId, qty, row);
+            updateSummary();
         });
     });
 
@@ -165,6 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.value = qty;
             const row = this.closest('tr');
             updateCart(row.dataset.productId, qty, row);
+            updateSummary();
         });
     });
 
@@ -184,6 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const price = parseFloat(row.querySelector('td:nth-child(2)').textContent.replace('$', ''));
                 row.querySelector('td:nth-child(4)').textContent = '$' + (price * quantity).toFixed(2);
             }
+            updateSummary();
             // Update cart preview in header
             if (document.querySelector('.cart-dropdown')) {
                 document.querySelector('.cart-dropdown').innerHTML = data.preview;
@@ -192,7 +179,34 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.cart-count').forEach(function(el) {
                 el.textContent = data.count || 0;
             });
+
+            // Update summary section
+            document.getElementById('cart-subtotal').textContent = '$' + data.subtotal.toFixed(2);
+            document.getElementById('cart-tax').textContent = '$' + data.tax.toFixed(2);
+            document.getElementById('cart-shipping').textContent = '$' + data.shipping.toFixed(2);
+            document.getElementById('cart-total').textContent = '$' + data.total.toFixed(2);
         });
+    }
+
+    function updateSummary() {
+        let subtotal = 0;
+        document.querySelectorAll('#cart-items tr').forEach(function(row) {
+            const priceCell = row.querySelector('td:nth-child(2)');
+            const qtyInput = row.querySelector('.quantity');
+            if (priceCell && qtyInput) {
+                const price = parseFloat(priceCell.textContent.replace('$', '')) || 0;
+                const qty = parseInt(qtyInput.value) || 1;
+                subtotal += price * qty;
+            }
+        });
+        const tax = +(subtotal * 0.17).toFixed(2);
+        const shipping = 0.00;
+        const total = +(subtotal + tax + shipping).toFixed(2);
+
+        document.getElementById('cart-subtotal').textContent = '$' + subtotal.toFixed(2);
+        document.getElementById('cart-tax').textContent = '$' + tax.toFixed(2);
+        document.getElementById('cart-shipping').textContent = '$' + shipping.toFixed(2);
+        document.getElementById('cart-total').textContent = '$' + total.toFixed(2);
     }
 });
 </script>

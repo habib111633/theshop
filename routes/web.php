@@ -9,7 +9,10 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ConversationController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
+
 
 
 
@@ -35,9 +38,11 @@ Route::match(['GET', 'POST'], '/shop/filter', [ProductController::class, 'ajaxFi
 
 
 
-Route::get('/checkout', function () {
-    return view('checkout');
-})->name('checkout');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout');
+    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+});
+
 Route::get('/cart', function () {
     return view('cart');
 })->name('cart');
@@ -48,14 +53,32 @@ Route::get('/product/{product}', [ProductController::class, 'publicDetail'])->na
 
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+
+// Admin resources
 
 Route::resource('categories', CategoryController::class);
 Route::resource('users', UserController::class);
-Route::middleware(['auth'])->group(function () {
+
     Route::resource('products', ProductController::class);
+
+// Admin-only export routes
+Route::prefix('exports')->group(function () {
+    Route::get('/products', [\App\Http\Controllers\Export\ProductExportController::class, 'export'])
+        ->name('exports.products');
+    Route::get('/products/queued', [\App\Http\Controllers\Export\ProductExportController::class, 'exportQueued'])
+        ->name('exports.products.queued');
+});
+
+Route::get('/admin/orders', [OrderController::class, 'index'])->name('admin.orders.index');
+Route::get('/admin/orders/{order}', [OrderController::class, 'show'])->name('admin.orders.show');
+Route::get('/admin/orders/{order}/edit', [OrderController::class, 'edit'])->name('admin.orders.edit');
+Route::put('/admin/orders/{order}', [OrderController::class, 'update'])->name('admin.orders.update');
+Route::delete('/admin/orders/{order}', [OrderController::class, 'destroy'])->name('admin.orders.destroy');
+
 });
 
 Route::get('/users/{user}/conversations', [UserController::class, 'conversations'])->name('users.conversations');
@@ -100,14 +123,5 @@ Route::get('/test-job1', function () {
 
     return 'Job has been dispatched! now check your logs to see if it was processed successfully.';
 });
-
-Route::prefix('exports')->group(function () {
-    Route::get('/products', [\App\Http\Controllers\Export\ProductExportController::class, 'export'])
-        ->name('exports.products');
-
-    Route::get('/products/queued', [\App\Http\Controllers\Export\ProductExportController::class, 'exportQueued'])
-        ->name('exports.products.queued');
-});
-
 
 require __DIR__ . '/auth.php';
