@@ -12,6 +12,8 @@ use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\UserOrderController;
+use App\Http\Controllers\DashboardController;
 
 
 
@@ -41,6 +43,9 @@ Route::match(['GET', 'POST'], '/shop/filter', [ProductController::class, 'ajaxFi
 Route::middleware(['auth'])->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout');
     Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+    Route::get('/checkout/thankyou/{order}', [CheckoutController::class, 'thankyou'])->name('checkout.thankyou');
+    Route::get('/checkout/stripe', [CheckoutController::class, 'stripe'])->name('checkout.stripe');
+    Route::post('/checkout/stripe/confirm', [CheckoutController::class, 'stripeConfirm'])->name('checkout.stripe.confirm');
 });
 
 Route::get('/cart', function () {
@@ -54,9 +59,7 @@ Route::get('/product/{product}', [ProductController::class, 'publicDetail'])->na
 
 
 Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 // Admin resources
 
@@ -109,19 +112,22 @@ Route::get('/cart', function () {
     return view('cart');
 })->name('cart');
 
-// Route::get('/send-test-mail', function () {
-//     Mail::raw('This is a test email from Laravel using Mailtrap.', function ($message) {
-//         $message->to('your@email.com')
-//             ->subject('Test Mail from Laravel');
-//     });
 
-//     return 'Test mail sent!';
-// });
 
-Route::get('/test-job1', function () {
-    \App\Jobs\TestJob::dispatch();
-
-    return 'Job has been dispatched! now check your logs to see if it was processed successfully.';
+Route::middleware(['auth'])->group(function () {
+    Route::get('/my-orders', [UserOrderController::class, 'index'])->name('user.orders.index');
+    Route::get('/my-orders/{order}', [UserOrderController::class, 'show'])->name('user.orders.show');
+    Route::post('/my-orders/{order}/cancel', [UserOrderController::class, 'cancel'])->name('user.orders.cancel');
+    Route::get('/my-orders/{order}/invoice', [UserOrderController::class, 'invoice'])->name('user.orders.invoice');
 });
+
+Route::view('/contact', 'contact')->name('contact');
+Route::view('/faq', 'faq')->name('faq');
+Route::view('/support', 'support')->name('support');
+Route::view('/returns', 'returns')->name('returns');
+
+Route::patch('/products/{product}/stock', [App\Http\Controllers\ProductController::class, 'updateStock'])->name('products.updateStock');
+
+Route::get('/product/{id}/available-stock', [App\Http\Controllers\ProductController::class, 'availableStock']);
 
 require __DIR__ . '/auth.php';

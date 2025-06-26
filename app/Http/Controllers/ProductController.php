@@ -152,4 +152,29 @@ public function publicDetail(Product $product)
 {
     return view('single-product-page', compact('product'));
 }
+
+public function updateStock(Request $request, Product $product)
+{
+    $request->validate([
+        'stock' => 'required|integer|min:0',
+    ]);
+
+    $product->stock = $request->stock;
+    $product->save();
+
+    return response()->json([
+        'success' => true,
+        'stock' => $product->stock,
+        'message' => 'Stock updated successfully!',
+    ]);
+}
+
+public function availableStock($id)
+{
+    $product = Product::findOrFail($id);
+    $cart = session()->get('cart', []);
+    $cartQty = isset($cart[$id]) ? $cart[$id]['quantity'] : 0;
+    $available = $product->stock - $cartQty;
+    return response()->json(['available_stock' => max(0, $available)]);
+}
 }

@@ -87,15 +87,15 @@
                             <p class="mb-2">Brand:<strong><a href="#" class="hover:text-primary"> Nike</a></strong>
                             </p>
                             <p class="mb-2">Product code:<strong> 00123</strong></p>
-                            <p class="mb-2">Availability:<strong> {{ number_format($product->stock, 0) }}
-                                    in stock</strong></p>
+                            <p class="mb-2">Availability:<strong>
+                                <span id="available-stock-{{ $product->id }}">Loading...</span>
+                            </strong></p>
                         </div>
-                        <div class="text-2xl font-semibold mb-8">${{ number_format($product->price, 2) }}</div>
+                        <div class="text-2xl font-semibold mb-8" data-unit-price="{{ $product->price }}">${{ number_format($product->price, 2) }}</div>
                         <div class="flex items-center mb-8">
                             <button id="decrease"
                                 class="bg-[#ff0042] hover:bg-transparent border border-transparent hover:border-[#ff0042] text-white hover:text-[#ff0042] font-semibold w-10 h-10 rounded-full flex items-center justify-center focus:outline-none">-</button>
-                            <input id="quantity" type="number" value="1" class="w-16 py-2 text-center focus:outline-none"
-                                >
+                            <input id="quantity" type="number" value="1" min="1" max="{{ $product->stock }}" class="w-16 py-2 text-center focus:outline-none">
                             <button id="increase"
                                 class="bg-[#ff0042] hover:bg-transparent border border-transparent hover:border-[#ff0042] text-white hover:text-[#ff0042] font-semibold  w-10 h-10 rounded-full focus:outline-none">+</button>
                         </div>
@@ -136,97 +136,8 @@
         </div>
     </div>
 </section>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const decreaseBtn = document.getElementById('decrease');
-    const increaseBtn = document.getElementById('increase');
-    const quantityInput = document.getElementById('quantity');
-    const priceElement = document.querySelector('.text-2xl.font-semibold.mb-8');
-    const addToCartBtn = document.querySelector('.add-to-cart-btn');
-    const unitPrice = {{ $product->price }};
-    const maxStock = {{ (int) $product->stock }};
-    let currentQuantity = 1;
 
-    function updateQuantity(qty) {
-        qty = parseInt(qty) || 1;
-        qty = Math.max(1, qty);
-        qty = Math.min(maxStock, qty);
-        currentQuantity = qty;
-        quantityInput.value = qty;
-        const totalPrice = (unitPrice * qty).toFixed(2);
-        priceElement.textContent = `$${totalPrice}`;
-        decreaseBtn.disabled = qty <= 1;
-        increaseBtn.disabled = qty >= maxStock;
-        decreaseBtn.classList.toggle('opacity-50', qty <= 1);
-        increaseBtn.classList.toggle('opacity-50', qty >= maxStock);
-    }
-
-    decreaseBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        updateQuantity(currentQuantity - 1);
-    });
-
-    increaseBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        updateQuantity(currentQuantity + 1);
-    });
-
-    quantityInput.addEventListener('input', function(e) {
-        updateQuantity(e.target.value);
-    });
-
-    quantityInput.addEventListener('change', function(e) {
-        if (e.target.value === '' || isNaN(e.target.value)) {
-            e.target.value = 1;
-            updateQuantity(1);
-        }
-    });
-
-    // Add to Cart AJAX (if needed)
-    addToCartBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        const productId = this.getAttribute('data-product-id');
-        const quantity = currentQuantity;
-        fetch('{{ route('cart.add') }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            },
-            body: JSON.stringify({ product_id: productId, quantity }),
-        })
-        .then(response => {
-            if (!response.ok) {
-                // Log HTTP errors
-                console.error('HTTP error:', response.status, response.statusText);
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Log backend response
-            console.log('Cart add response:', data);
-            document.querySelectorAll('.cart-count').forEach(function(el) {
-                el.textContent = data.count || 0;
-            });
-            if (document.querySelector('.cart-dropdown')) {
-                document.querySelector('.cart-dropdown').innerHTML = data.preview;
-            }
-            // Optionally show error from backend
-            if (data.error) {
-                alert('Error: ' + data.error);
-            }
-        })
-        .catch(error => {
-            // Log JS/fetch errors
-            console.error('Fetch error:', error);
-            alert('A network or server error occurred. See console for details.');
-        });
-    });
-
-    // Initialize
-    updateQuantity(1);
-});
-</script>
+<script src="/js/cart-manager.js"></script>
 
 <style>
     input[type=number]::-webkit-inner-spin-button,

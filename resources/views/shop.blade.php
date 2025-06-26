@@ -103,6 +103,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initial attachment of pagination events
     attachPaginationEvents();
+
+    // After updating products grid, re-attach available stock and add-to-cart logic
+    reattachAvailableStockAndCart();
 });
 
 function initializeEventListeners() {
@@ -200,7 +203,7 @@ function sendFilterRequest(url = null) {
         })
         .then(html => {
             productsGrid.innerHTML = html;
-            attachPaginationEvents();
+            reattachAvailableStockAndCart();
 
             // Scroll to top of products grid (optional)
             productsGrid.scrollIntoView({
@@ -226,6 +229,30 @@ function attachPaginationEvents() {
         });
     });
 }
+
+// After updating products grid, re-attach available stock and add-to-cart logic
+function reattachAvailableStockAndCart() {
+    document.querySelectorAll('[id^="available-stock-"]').forEach(function(span) {
+        const productId = span.id.replace('available-stock-', '');
+        fetch('/product/' + productId + '/available-stock')
+            .then(response => response.json())
+            .then(data => {
+                let stockElem = document.getElementById('available-stock-' + productId);
+                let btn = document.getElementById('add-to-cart-btn-' + productId);
+                if (data.available_stock > 0) {
+                    stockElem.textContent = data.available_stock + ' in stock';
+                    if(btn) { btn.disabled = false; btn.textContent = 'Add to Cart'; }
+                } else {
+                    stockElem.textContent = 'Out of Stock';
+                    if(btn) { btn.disabled = true; btn.textContent = 'Out of Stock'; }
+                }
+            });
+    });
+    // Re-initialize cart manager for new products
+    if (typeof CartManager !== 'undefined') {
+        CartManager.initialize();
+    }
+}
 </script>
-</script>
+<script src="/js/cart-manager.js"></script>
 @endsection

@@ -61,26 +61,138 @@
             <!-- Center section: Menu -->
             <nav class="hidden lg:flex md:flex-grow justify-center">
                 <ul class="flex justify-center space-x-4 text-white">
-                    <li><a href="{{ route('home')}}" class="hover:text-[#ff0042] font-semibold">Home</a></li>
-
-
-
-
-
-                    <li><a href="{{ route('shop')}}" class="hover:text-[#ff0042] font-semibold">Shop</a></li>
-                    <li><a href="{{ route('product-detail')}}" class="hover:text-[#ff0042] font-semibold">Product</a>
+                    <li><a href="{{ route('home') }}" class="hover:text-[#ff0042] font-semibold">Home</a></li>
+                    <li><a href="{{ route('shop') }}" class="hover:text-[#ff0042] font-semibold">Shop</a></li>
+                    <li class="relative group">
+                        <button class="hover:text-[#ff0042] font-semibold focus:outline-none">Help
+                            <svg class="w-3 h-3 ml-1 transition-transform group-hover:rotate-180 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <!-- Dropdown -->
+                        <ul class="absolute left-0 mt-0 w-40 bg-white text-gray-800 rounded shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition z-50">
+                            <li><a href="{{ route('faq') }}" class="block px-4 py-2 hover:bg-gray-100 transition">FAQ</a></li>
+                            <li><a href="{{ route('support') }}" class="block px-4 py-2 hover:bg-gray-100 transition">Support</a></li>
+                            <li><a href="{{ route('returns') }}" class="block px-4 py-2 hover:bg-gray-100 transition">Returns</a></li>
+                        </ul>
                     </li>
-                    <li><a href="404.html" class="hover:text-[#ff0042] font-semibold">404 page</a></li>
-                    <li><a href="{{ route('checkout')}}" class="hover:text-[#ff0042] font-semibold">Checkout</a></li>
+                    <li><a href="{{ route('contact') }}" class="hover:text-[#ff0042] font-semibold">Contact</a></li>
+                    <li><a href="{{ route('checkout') }}" class="hover:text-[#ff0042] font-semibold">Checkout</a></li>
                 </ul>
             </nav>
 
             <!-- Right section: Buttons (for desktop) -->
             <div class="hidden lg:flex items-center space-x-4 relative">
-                <a href="{{ route('register')}}"
-                    class="bg-[#ff0042] border border-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] font-semibold px-4 py-2 rounded-full inline-block">Register</a>
-                <a href="{{ route('login')}}"
-                    class="bg-[#ff0042] border border-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] font-semibold px-4 py-2 rounded-full inline-block">Login</a>
+  @guest
+                <!-- Register/Login Buttons for guests -->
+                <a href="{{ route('register') }}"
+                    class="bg-[#ff0042] border border-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] font-semibold px-4 py-2 rounded-full">Register</a>
+                <a href="{{ route('login') }}"
+                    class="bg-[#ff0042] border border-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] font-semibold px-4 py-2 rounded-full">Login</a>
+            @else
+               <!-- User Profile Dropdown -->
+<div class="relative dropdown-container">
+    <!-- Dropdown Button -->
+    <button class="dropdown-btn flex items-center space-x-2 text-white font-semibold hover:text-[#ff0042] focus:outline-none">
+        <svg xmlns="http://www.w3.org/2000/svg"
+             class="h-8 w-8 text-white rounded-full bg-gray-600 p-1"
+             fill="none"
+             viewBox="0 0 24 24"
+             stroke="currentColor"
+             stroke-width="2">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+        </svg>
+        <span>{{ auth()->user()->name }}</span>
+        <svg class="dropdown-chevron w-4 h-4 transition-transform duration-200"
+             fill="none"
+             stroke="currentColor"
+             viewBox="0 0 24 24">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7" />
+        </svg>
+    </button>
+
+    <!-- Dropdown Menu -->
+    <div class="dropdown-menu hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg overflow-hidden z-50 border border-gray-100">
+        <div class="py-1">
+            <a href="{{ route('profile.edit') }}"
+               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition">
+                Profile
+            </a>
+            @if(auth()->check() && !auth()->user()->is_admin)
+                <a href="{{ route('user.orders.index') }}"
+                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition">
+                    My Orders
+        </a>
+        @endif
+    @if(auth()->check() && auth()->user()->is_admin)
+        <a href="{{ route('dashboard') }}"
+           class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition">
+            Dashboard
+        </a>
+    @endif
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit"
+                        class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition">
+                    Logout
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .dropdown-btn:focus + .dropdown-menu,
+    .dropdown-menu:hover {
+        display: block;
+    }
+    .dropdown-menu {
+        display: none;
+    }
+    .dropdown-container.open .dropdown-menu {
+        display: block;
+    }
+    .dropdown-container.open .dropdown-chevron {
+        transform: rotate(180deg);
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dropdowns = document.querySelectorAll('.dropdown-container');
+
+    dropdowns.forEach(dropdown => {
+        const btn = dropdown.querySelector('.dropdown-btn');
+        const menu = dropdown.querySelector('.dropdown-menu');
+
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdown.classList.toggle('open');
+        });
+
+        // Close when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!dropdown.contains(e.target)) {
+                dropdown.classList.remove('open');
+            }
+        });
+
+        // Close when pressing Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                dropdown.classList.remove('open');
+            }
+        });
+    });
+});
+</script>
+            @endguest
+
                 <div class="relative group cart-wrapper">
                     <a href="{{ route('cart') }}">
                         <img src="{{ asset('images/cart-shopping.svg') }}" alt="Cart"
@@ -93,10 +205,10 @@
                         @include('partials.cart-preview', ['cart' => session('cart', [])])
                     </div>
                 </div>
-                <a id="search-icon" href="javascript:void(0);" class="text-white hover:text-[#ff0042] group">
+                <!-- <a id="search-icon" href="javascript:void(0);" class="text-white hover:text-[#ff0042] group">
                     <img src="{{ asset('images/search-icon.svg') }}" alt="Search"
                         class="h-6 w-6 transition-transform transform group-hover:scale-120">
-                </a>
+                </a> -->
                 <!-- Search field -->
                 <div id="search-field"
                     class="hidden absolute top-full right-0 mt-2 w-full bg-white shadow-lg p-2 rounded">
@@ -110,52 +222,13 @@
     <!-- Mobile menu -->
     <nav id="mobile-menu-placeholder" class="mobile-menu hidden flex-col items-center space-y-8 lg:hidden">
         <ul class="w-full">
-            <li><a href="index.html" class="hover:text-[#ff0042] font-bold block py-2">Home</a></li>
-
-            <!-- Men Dropdown -->
-            <li class="relative group" x-data="{ open: false }">
-                <a @click="open = !open; $event.preventDefault()"
-                    class="hover:text-[#ff0042] font-bold  py-2 flex justify-center items-center cursor-pointer">
-                    <span>Men</span>
-                    <span @click.stop="open = !open">
-                        <i :class="open ? 'fas fa-chevron-up text-xs ml-2' : 'fas fa-chevron-down text-xs ml-2'"></i>
-                    </span>
-                </a>
-                <ul class="mobile-dropdown-menu" x-show="open" x-transition class="space-y-2">
-                    <li><a href="shop.html" class="hover:text-[#ff0042] font-bold block pt-2 pb-3">Shop Men</a></li>
-                    <li><a href="single-product-page.html" class="hover:text-[#ff0042] font-bold block py-2">Men item
-                            1</a></li>
-                    <li><a href="single-product-page.html" class="hover:text-[#ff0042] font-bold block py-2">Men item
-                            2</a></li>
-                    <li><a href="single-product-page.html" class="hover:text-[#ff0042] font-bold block py-2">Men item
-                            3</a></li>
-                </ul>
-            </li>
-
-            <!-- Women Dropdown -->
-            <li class="relative group" x-data="{ open: false }">
-                <a @click="open = !open; $event.preventDefault()"
-                    class="hover:text-[#ff0042] font-bold py-2 flex justify-center items-center cursor-pointer">
-                    <span>Women</span>
-                    <span @click.stop="open = !open">
-                        <i :class="open ? 'fas fa-chevron-up text-xs ml-2' : 'fas fa-chevron-down text-xs ml-2'"></i>
-                    </span>
-                </a>
-                <ul class="mobile-dropdown-menu" x-show="open" x-transition class="pl-4 space-y-2">
-                    <li><a href="shop.html" class="hover:text-[#ff0042] font-bold block py-2">Shop Women</a></li>
-                    <li><a href="single-product-page.html" class="hover:text-[#ff0042] font-bold block py-2">Women item
-                            1</a></li>
-                    <li><a href="single-product-page.html" class="hover:text-[#ff0042] font-bold block py-2">Women item
-                            2</a></li>
-                    <li><a href="single-product-page.html" class="hover:text-[#ff0042] font-bold block py-2">Women item
-                            3</a></li>
-                </ul>
-            </li>
-
-            <li><a href="shop.html" class="hover:text-[#ff0042] font-bold block py-2">Shop</a></li>
-            <li><a href="single-product-page.html" class="hover:text-[#ff0042] font-bold block py-2">Product</a></li>
-            <li><a href="404.html" class="hover:text-[#ff0042] font-bold block py-2">404 page</a></li>
-            <li><a href="checkout.html" class="hover:text-[#ff0042] font-bold block py-2">Checkout</a></li>
+            <li><a href="{{ route('home') }}" class="hover:text-[#ff0042] font-bold block py-2">Home</a></li>
+            <li><a href="{{ route('shop') }}" class="hover:text-[#ff0042] font-bold block py-2">Shop</a></li>
+            <li><a href="{{ route('checkout') }}" class="hover:text-[#ff0042] font-bold block py-2">Checkout</a></li>
+            <li><a href="{{ route('contact') }}" class="hover:text-[#ff0042] font-bold block py-2">Contact</a></li>
+            <li><a href="{{ route('faq') }}" class="hover:text-[#ff0042] font-bold block py-2">FAQ</a></li>
+            <li><a href="{{ route('support') }}" class="hover:text-[#ff0042] font-bold block py-2">Support</a></li>
+            <li><a href="{{ route('returns') }}" class="hover:text-[#ff0042] font-bold block py-2">Returns</a></li>
         </ul>
         <div class="flex flex-col mt-6 space-y-2 items-center">
             <a href="{{ route('register') }}"
@@ -193,8 +266,9 @@
                 <div class="w-full sm:w-1/6 px-4 mb-8">
                     <h3 class="text-lg font-semibold mb-4">Pages</h3>
                     <ul>
-                        <li><a href="/shop.html" class="hover:text-[#ff0042]">Shop</a></li>
-                        <li><a href="/single-product-page.html" class="hover:text-[#ff0042]">Product</a></li>
+                        <li><a href="{{ route('shop') }}" class="hover:text-[#ff0042]">Shop</a></li>
+                        <li><a href="{{ route('faq') }}" class="hover:text-[#ff0042]">FAQ</a></li>
+                        <li><a href="{{ route('contact') }}" class="hover:text-[#ff0042]">Contact</a></li>
                         <li><a href="/checkout.html" class="hover:text-[#ff0042]">Checkout</a></li>
                         <li><a href="/404.html" class="hover:text-[#ff0042]">404</a></li>
                     </ul>
@@ -242,7 +316,7 @@
                 <!-- Contact Information -->
                 <div class="w-full sm:w-2/6 px-4 mb-8">
                     <h3 class="text-lg font-semibold mb-4">Contact Us</h3>
-                    <p><img src="assets/images/template-logo.png" alt="Logo" class="h-[60px] mb-4"></p>
+                    <p><img src="{{ asset('images/template-logo.png') }}" alt="Logo" class="h-[60px] mb-4"></p>
                     <p>123 Street Name, Paris, France</p>
                     <p class="text-xl font-bold my-4">Phone: (123) 456-7890</p>
                     <a href="mailto:info@company.com" class="underline">Email: info@company.com</a>
@@ -300,30 +374,28 @@
         })
         .then(response => response.json())
         .then(data => {
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
             // Update cart preview HTML
             if (data.preview) {
                 document.querySelector(".cart-dropdown").innerHTML = data.preview;
-
-                // Force show cart preview temporarily
                 document.querySelector(".cart-wrapper").classList.add("open");
                 setTimeout(() => {
                     document.querySelector(".cart-wrapper").classList.remove("open");
                 }, 3000);
             }
-
             // Update cart count badge
             if (data.count) {
                 document.querySelector(".cart-count").textContent = data.count;
             }
-
-            // Show success message
          })
         .catch(error => {
+            alert('A network or server error occurred. See console for details.');
             console.error("Error:", error);
-            alert("Failed to add item to cart");
         })
         .finally(() => {
-            // Reset button state
             this.disabled = false;
             this.textContent = "Add to Cart";
         });
@@ -331,7 +403,7 @@
 });
     </script>
     </script>
-    < script src="node_modules/swiper/swiper-bundle.js">
+    <script src="node_modules/swiper/swiper-bundle.js">
         </script>
         <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
         <script src="{{ asset('js/script.js') }}"></script>

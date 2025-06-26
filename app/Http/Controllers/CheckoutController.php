@@ -6,6 +6,9 @@ use App\Models\User;
 use App\Notifications\NewOrderNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Stripe\Stripe;
+use Stripe\PaymentIntent;
+use Illuminate\Support\Facades\DB;
 class CheckoutController extends Controller
 {
     public function __construct()
@@ -23,6 +26,15 @@ class CheckoutController extends Controller
             if (empty($cart)) {
                 return back()->with('error', 'Your cart is empty.');
             }
+
+            // Stock validation for all cart items
+            foreach ($cart as $productId => $item) {
+                $product = \App\Models\Product::findOrFail($productId);
+                if ($item['quantity'] > $product->stock) {
+                    return back()->with('error', 'Not enough stock for ' . $product->name . '. Only ' . $product->stock . ' left.');
+                }
+            }
+
             // Calculate totals
             $subtotal = 0;
             foreach ($cart as $item) {
@@ -49,28 +61,33 @@ class CheckoutController extends Controller
             $orderData['shipping'] = $shipping;
             $orderData['total'] = $total;
             $orderData['user_id'] = auth()->id();
-            // Create the order
-            $order = Order::create($orderData);
-            // Create order items
-            foreach ($cart as $productId => $item) {
-                $order->orderItems()->create([
-                    'product_id'   => $productId,
-                    'product_name' => $item['name'],
-                    'price'        => $item['price'],
-                    'quantity'     => $item['quantity'],
-                ]);
-            }
-            // Find the admin or recipient(s) to notify
-            $admin = User::where('is_admin', true)->first();
-            if ($admin) {
-                $admin->notify(new NewOrderNotification($order));
-            }
-            // Notify the customer if logged in and not admin
-            if (Auth::check() && !Auth::user()->is_admin) {
-                Auth::user()->notify(new NewOrderNotification($order));
-            }
+
+            // Use a DB transaction for atomicity
+            $order = null;
+            DB::transaction(function () use ($orderData, $cart, &$order) {
+                $order = \App\Models\Order::create($orderData);
+                foreach ($cart as $productId => $item) {
+                    $product = \App\Models\Product::findOrFail($productId);
+                    // Double-check stock inside transaction
+                    if ($item['quantity'] > $product->stock) {
+                        throw new \Exception('Not enough stock for ' . $product->name . '. Only ' . $product->stock . ' left.');
+                    }
+                    $product->decrement('stock', $item['quantity']);
+                    $order->orderItems()->create([
+                        'product_id'   => $productId,
+                        'product_name' => $item['name'],
+                        'price'        => $item['price'],
+                        'quantity'     => $item['quantity'],
+                    ]);
+                }
+                // Optionally: notify user/admin here
+                // $order->user->notify(new NewOrderNotification($order));
+            });
+
             session()->forget('cart');
-            return redirect()->route('home')->with('success', 'Order placed successfully!');
+            // Redirect to thank you page with order ID
+            return redirect()->route('checkout.thankyou', ['order' => $order->id])
+                ->with('order', $orderData);
         } catch (\Throwable $e) {
             \Log::error('Order processing failed: '.$e->getMessage(), ['exception' => $e]);
             return back()->with('error', 'Order failed: ' . $e->getMessage());
@@ -83,4 +100,112 @@ class CheckoutController extends Controller
         }
         return view('checkout');
     }
+    // Add this new method
+    public function thankyou(Request $request, $order)
+    {
+        $order = Order::findOrFail($order);
+        return view('checkout.thankyou', compact('order'));
+    }
+    public function stripe(Request $request)
+    {
+        $cart = session('cart', []);
+        if (empty($cart)) {
+            return redirect()->route('checkout')->with('error', 'Your cart is empty.');
+        }
+        // Calculate totals (reuse logic from process)
+        $subtotal = 0;
+        foreach ($cart as $item) {
+            $subtotal += $item['price'] * $item['quantity'];
+        }
+        $taxRate = 0.04;
+        $tax = round($subtotal * $taxRate, 2);
+        $shipping = 0.00;
+        $total = $subtotal + $tax + $shipping;
+        return view('checkout.stripe', compact('cart', 'subtotal', 'tax', 'shipping', 'total'));
+    }
+    public function stripeConfirm(Request $request)
+    {
+        $request->validate([
+            'payment_method_id' => 'required|string',
+            'billing_name' => 'required|string',
+            'billing_email' => 'required|email',
+            'billing_city' => 'required|string',
+            'billing_state' => 'required|string',
+            'billing_zip' => 'required|string',
+            'billing_phone' => 'required|string',
+            // Add more validation as needed
+        ]);
+
+        $cart = session('cart', []);
+        if (empty($cart)) {
+            return response()->json(['error' => 'Your cart is empty.'], 422);
+        }
+
+        $subtotal = 0;
+        foreach ($cart as $item) {
+            $subtotal += $item['price'] * $item['quantity'];
+        }
+        $taxRate = 0.04;
+        $tax = round($subtotal * $taxRate, 2);
+        $shipping = 0.00;
+        $total = $subtotal + $tax + $shipping;
+
+        // Stripe payment
+        try {
+            Stripe::setApiKey(config('services.stripe.secret'));
+            $intent = PaymentIntent::create([
+                'amount' => (int)($total * 100), // in cents
+                'currency' => 'usd',
+                'payment_method' => $request->payment_method_id,
+                'confirmation_method' => 'manual',
+                'confirm' => true,
+                'description' => 'Order payment',
+                'metadata' => [
+                    'user_id' => auth()->id(),
+                ],
+                'receipt_email' => $request->billing_email,
+            ]);
+
+            if ($intent->status === 'requires_action' && $intent->next_action->type === 'use_stripe_sdk') {
+                // 3D Secure required
+                return response()->json(['requires_action' => true, 'payment_intent_client_secret' => $intent->client_secret]);
+            } elseif ($intent->status === 'succeeded') {
+                // Payment successful, create order
+                $orderData = $request->only([
+                    'billing_name', 'billing_email', 'billing_city', 'billing_state', 'billing_zip', 'billing_phone',
+                ]);
+                $orderData['payment_method'] = 'bank';
+                $orderData['subtotal'] = $subtotal;
+                $orderData['tax'] = $tax;
+                $orderData['shipping'] = $shipping;
+                $orderData['total'] = $total;
+                $orderData['user_id'] = auth()->id();
+                $orderData['status'] = 'processing';
+                $order = null;
+                DB::transaction(function () use ($orderData, $cart, &$order) {
+                    $order = \App\Models\Order::create($orderData);
+                    foreach ($cart as $productId => $item) {
+                        $product = \App\Models\Product::findOrFail($productId);
+                        if ($item['quantity'] > $product->stock) {
+                            throw new \Exception('Not enough stock for ' . $product->name . '. Only ' . $product->stock . ' left.');
+                        }
+                        $product->decrement('stock', $item['quantity']);
+                        $order->orderItems()->create([
+                            'product_id'   => $productId,
+                            'product_name' => $item['name'],
+                            'price'        => $item['price'],
+                            'quantity'     => $item['quantity'],
+                        ]);
+                    }
+                });
+                session()->forget('cart');
+                return response()->json(['success' => true, 'redirect' => route('checkout.thankyou', ['order' => $order->id])]);
+            } else {
+                return response()->json(['error' => 'Payment could not be completed.'], 422);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 422);
+        }
+    }
 }
+

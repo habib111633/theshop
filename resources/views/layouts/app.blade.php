@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'dashboard') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -102,10 +102,7 @@
         border-radius: 5px;
         cursor: pointer;
     }
-    </style>
-
-    <style>
-    /* Your existing CSS remains the same */
+/* Your existing CSS remains the same */
     .searchable-select-container {
         position: relative;
         margin-bottom: 15px;
@@ -205,8 +202,6 @@
         font-size: 1rem;
         font-weight: bold;
     }
-    </style>
-    <style>
     .loader {
         border: 8px solid #f3f3f3;
         border-top: 8px solid #3498db;
