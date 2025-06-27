@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stripe Test</title>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <h1>Stripe API Test</h1>
+    
+    <div id="card-element"></div>
+    <button id="test-button">Test Payment</button>
+    <div id="result"></div>
+
+    <script>
+        // Initialize Stripe (replace with your actual key)
+        const stripe = Stripe('pk_test_51...'); // Replace with your test key
+        const elements = stripe.elements();
+        
+        // Create card element
+        const cardElement = elements.create('card');
+        cardElement.mount('#card-element');
+        
+        document.getElementById('test-button').addEventListener('click', async function() {
+            try {
+                // Create payment method
+                const { paymentMethod, error } = await stripe.createPaymentMethod({
+                    type: 'card',
+                    card: cardElement,
+                    billing_details: {
+                        name: 'Test User',
+                        email: 'test@example.com',
+                    },
+                });
+                
+                if (error) {
+                    document.getElementById('result').innerHTML = 'Error: ' + error.message;
+                    return;
+                }
+                
+                // Test the API endpoint
+                const response = await fetch('/checkout/stripe/confirm', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+                    },
+                    body: JSON.stringify({
+                        payment_method: paymentMethod.id,
+                        billing_name: 'Test User',
+                        billing_email: 'test@example.com',
+                        billing_city: 'Test City',
+                        billing_state: 'Test State',
+                        billing_zip: '12345',
+                        billing_phone: '1234567890',
+                    }),
+                });
+                
+                const result = await response.text();
+                document.getElementById('result').innerHTML = '<pre>' + result + '</pre>';
+                
+            } catch (error) {
+                document.getElementById('result').innerHTML = 'Error: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html> 

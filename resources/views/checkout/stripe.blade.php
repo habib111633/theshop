@@ -14,6 +14,13 @@
                 </div>
             @endif
 
+            <!-- Test Mode Notice -->
+            @if(config('services.stripe.key') && str_contains(config('services.stripe.key'), 'pk_test'))
+            <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
+                <strong>Test Mode:</strong> You're using Stripe test mode. Use test card numbers like 4242 4242 4242 4242.
+            </div>
+            @endif
+
             <div class="bg-white rounded-lg shadow-md p-6">
                 <!-- Order Summary -->
                 <div class="mb-6">
@@ -128,6 +135,19 @@
                         </div>
                     </button>
                 </form>
+
+                <!-- Debug Information (remove in production) -->
+                @if(config('app.debug'))
+                <div class="mt-6 p-4 bg-gray-100 rounded-lg">
+                    <h4 class="font-semibold text-sm mb-2">Debug Info:</h4>
+                    <div class="text-xs space-y-1">
+                        <div><strong>Stripe Key:</strong> {{ substr(config('services.stripe.key'), 0, 10) }}...</div>
+                        <div><strong>Cart Items:</strong> {{ count($cart) }}</div>
+                        <div><strong>Total:</strong> ${{ number_format($total, 2) }}</div>
+                        <div><strong>Payment Intent:</strong> {{ $paymentIntent ?? 'Not created' }}</div>
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
     </div>

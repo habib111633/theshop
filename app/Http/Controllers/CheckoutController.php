@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Laravel\Cashier\Exceptions\IncompletePayment;
+use Stripe\PaymentIntent;
 
 class CheckoutController extends Controller
 {
@@ -176,24 +177,7 @@ class CheckoutController extends Controller
                 'cart_items' => count($cart)
             ]);
             
-            // Charge the user using Cashier
-            $payment = $user->charge($total * 100, $request->payment_method, [
-                'description' => 'Order payment',
-                'metadata' => [
-                    'user_id' => $user->id,
-                    'billing_email' => $request->billing_email,
-                ],
-                'receipt_email' => $request->billing_email,
-            ]);
-
-            // Log successful payment
-            \Log::info('Stripe payment successful', [
-                'user_id' => $user->id,
-                'payment_id' => $payment->id,
-                'amount' => $total
-            ]);
-
-            // Payment successful, create order
+            // Create order FIRST (with pending status)
             $orderData = $request->only([
                 'billing_name', 'billing_email', 'billing_city', 'billing_state', 'billing_zip', 'billing_phone',
             ]);
@@ -203,8 +187,7 @@ class CheckoutController extends Controller
             $orderData['shipping'] = $shipping;
             $orderData['total'] = $total;
             $orderData['user_id'] = $user->id;
-            $orderData['status'] = 'processing';
-            $orderData['stripe_payment_id'] = $payment->id;
+            $orderData['status'] = 'pending'; // Start with pending status
 
             $order = null;
             DB::transaction(function () use ($orderData, $cart, &$order) {
@@ -223,6 +206,31 @@ class CheckoutController extends Controller
                     ]);
                 }
             });
+            
+            // Now try to charge the user
+            $payment = $user->charge($total * 100, $request->payment_method, [
+                'description' => 'Order payment',
+                'metadata' => [
+                    'user_id' => $user->id,
+                    'order_id' => $order->id,
+                    'billing_email' => $request->billing_email,
+                ],
+                'receipt_email' => $request->billing_email,
+            ]);
+
+            // Payment successful, update order status
+            $order->update([
+                'status' => 'processing',
+                'stripe_payment_id' => $payment->id
+            ]);
+
+            // Log successful payment
+            \Log::info('Stripe payment successful', [
+                'user_id' => $user->id,
+                'payment_id' => $payment->id,
+                'order_id' => $order->id,
+                'amount' => $total
+            ]);
 
             session()->forget('cart');
             session()->forget('checkout_data');
@@ -233,28 +241,40 @@ class CheckoutController extends Controller
             // Log 3D Secure requirement
             \Log::info('3D Secure authentication required', [
                 'user_id' => auth()->id(),
+                'order_id' => $order->id,
                 'payment_intent_id' => $exception->payment->id,
                 'status' => $exception->payment->status
             ]);
             
+            // Clear cart and checkout data since order is created
+            session()->forget('cart');
+            session()->forget('checkout_data');
+            
             return response()->json([
                 'requires_action' => true,
-                'payment_intent_client_secret' => $exception->payment->client_secret(),
-                'message' => '3D Secure authentication required'
+                'payment_intent_client_secret' => $exception->payment->clientSecret(),
+                'message' => '3D Secure authentication required',
+                'redirect' => route('checkout.thankyou', ['order' => $order->id])
             ]);
             
         } catch (\Laravel\Cashier\Exceptions\IncompletePayment $exception) {
             // Alternative way to catch IncompletePayment
             \Log::info('3D Secure authentication required (alternative)', [
                 'user_id' => auth()->id(),
+                'order_id' => $order->id,
                 'payment_intent_id' => $exception->payment->id ?? 'unknown',
                 'status' => $exception->payment->status ?? 'unknown'
             ]);
             
+            // Clear cart and checkout data since order is created
+            session()->forget('cart');
+            session()->forget('checkout_data');
+            
             return response()->json([
                 'requires_action' => true,
-                'payment_intent_client_secret' => $exception->payment->client_secret(),
-                'message' => '3D Secure authentication required'
+                'payment_intent_client_secret' => $exception->payment->clientSecret(),
+                'message' => '3D Secure authentication required',
+                'redirect' => route('checkout.thankyou', ['order' => $order->id])
             ]);
             
         } catch (\Stripe\Exception\CardException $e) {
