@@ -159,14 +159,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Please fill in all required fields.');
                 return;
             }
-
-            // If payment method is 'bank', redirect to Stripe payment page
-            const paymentMethod = checkoutForm.querySelector('input[name="payment_method"]:checked');
-            if (paymentMethod && paymentMethod.value === 'bank') {
-                e.preventDefault();
-                // Optionally, pass form data via session or query string if needed
-                window.location.href = "{{ route('checkout.stripe') }}";
-            }
         });
     }
 

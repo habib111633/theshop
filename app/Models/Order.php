@@ -25,6 +25,7 @@ class Order extends Model
         'status',
         'shipping_zip',
         'shipping_address',
+        'stripe_payment_id',
     ];
 
     public function orderItems()

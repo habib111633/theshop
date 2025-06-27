@@ -19,7 +19,7 @@ class DashboardController extends Controller
         $labels = [];
         for ($i = 6; $i >= 0; $i--) {
             $date = Carbon::today()->subDays($i);
-            $labels[] = $date->format('D');
+            $labe3ls[] = $date->format('D');
             $salesData[] = Order::whereDate('created_at', $date)->sum('total');
         }
 
