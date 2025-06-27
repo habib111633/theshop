@@ -31,7 +31,7 @@
                             <span>${{ number_format($subtotal, 2) }}</span>
                         </div>
                         <div class="flex justify-between">
-                            <span>Tax (4%):</span>
+                            <span>Tax (5%):</span>
                             <span>${{ number_format($tax, 2) }}</span>
                         </div>
                         <div class="flex justify-between">
@@ -219,26 +219,68 @@ document.addEventListener('DOMContentLoaded', function() {
                 }),
             });
             
-            const result = await response.json();
+            // Check if response is OK
+            if (!response.ok) {
+                // Get the response text to see what we're actually getting
+                const responseText = await response.text();
+                console.error('Server response:', responseText);
+                
+                // Try to parse as JSON, but handle HTML responses
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                } catch (parseError) {
+                    // If it's not JSON, it's probably an HTML error page
+                    throw new Error(`Server error (${response.status}): ${response.statusText}. Please try again or contact support.`);
+                }
+                
+                if (result.error) {
+                    throw new Error(result.error);
+                } else {
+                    throw new Error(`Server error: ${response.status} ${response.statusText}`);
+                }
+            }
+            
+            // Try to parse JSON response
+            let result;
+            try {
+                result = await response.json();
+            } catch (parseError) {
+                // If JSON parsing fails, get the raw response for debugging
+                const responseText = await response.text();
+                console.error('Failed to parse JSON response:', responseText);
+                throw new Error('Invalid server response. Please try again.');
+            }
             
             if (result.requires_action) {
                 // Handle 3D Secure authentication
-                const { error: confirmError } = await stripe.confirmCardPayment(result.payment_intent_client_secret);
+                console.log('3D Secure authentication required');
+                
+                const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(result.payment_intent_client_secret);
                 
                 if (confirmError) {
+                    console.error('3D Secure confirmation error:', confirmError);
                     throw new Error(confirmError.message);
                 }
                 
-                // Payment successful after 3D Secure
-                window.location.href = result.redirect;
+                // Check if payment was successful after 3D Secure
+                if (paymentIntent && paymentIntent.status === 'succeeded') {
+                    console.log('3D Secure payment successful');
+                    window.location.href = result.redirect;
+                } else {
+                    throw new Error('3D Secure authentication failed. Please try again.');
+                }
             } else if (result.success) {
                 // Payment successful
+                console.log('Payment successful');
                 window.location.href = result.redirect;
             } else {
                 throw new Error(result.error || 'Payment failed');
             }
             
         } catch (error) {
+            console.error('Payment error:', error);
+            
             // Show error message
             cardErrors.textContent = error.message;
             cardErrors.classList.remove('hidden');

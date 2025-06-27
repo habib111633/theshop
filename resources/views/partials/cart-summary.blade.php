@@ -43,7 +43,7 @@
                 <span class="text-xl mr-1">💳</span>
                 <span class="font-medium">Stripe</span>
             </span>
-            <span class="ml-2 text-xs text-gray-500 hidden md:inline">(Credit card payment, 4% tax)</span>
+            <span class="ml-2 text-xs text-gray-500 hidden md:inline">(Credit card payment, 5% tax)</span>
             <span class="absolute right-2 top-2 w-3 h-3 rounded-full border border-[#ff0042] bg-white peer-checked:bg-[#ff0042]"></span>
         </label>
     </div>

@@ -7,6 +7,7 @@ use App\Notifications\NewOrderNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Laravel\Cashier\Exceptions\IncompletePayment;
 
 class CheckoutController extends Controller
@@ -48,7 +49,7 @@ class CheckoutController extends Controller
             foreach ($cart as $item) {
                 $subtotal += $item['price'] * $item['quantity'];
             }
-            $taxRate = $request->payment_method === 'bank' ? 0.04 : 0.17;
+            $taxRate = $request->payment_method === 'bank' ? 0.05 : 0.17;
             $tax = round($subtotal * $taxRate, 2);
             $shipping = 0.00;
             $total = $subtotal + $tax + $shipping;
@@ -125,7 +126,7 @@ class CheckoutController extends Controller
         foreach ($cart as $item) {
             $subtotal += $item['price'] * $item['quantity'];
         }
-        $taxRate = 0.04;
+        $taxRate = 0.05;
         $tax = round($subtotal * $taxRate, 2);
         $shipping = 0.00;
         $total = $subtotal + $tax + $shipping;
@@ -138,32 +139,42 @@ class CheckoutController extends Controller
     }
     public function stripeConfirm(Request $request)
     {
-        $request->validate([
-            'payment_method' => 'required|string',
-            'billing_name' => 'required|string',
-            'billing_email' => 'required|email',
-            'billing_city' => 'required|string',
-            'billing_state' => 'required|string',
-            'billing_zip' => 'required|string',
-            'billing_phone' => 'required|string',
-        ]);
-
-        $cart = session('cart', []);
-        if (empty($cart)) {
-            return response()->json(['error' => 'Your cart is empty.'], 422);
-        }
-
-        $subtotal = 0;
-        foreach ($cart as $item) {
-            $subtotal += $item['price'] * $item['quantity'];
-        }
-        $taxRate = 0.04;
-        $tax = round($subtotal * $taxRate, 2);
-        $shipping = 0.00;
-        $total = $subtotal + $tax + $shipping;
-
         try {
+            // Validate the request
+            $request->validate([
+                'payment_method' => 'required|string',
+                'billing_name' => 'required|string',
+                'billing_email' => 'required|email',
+                'billing_city' => 'required|string',
+                'billing_state' => 'required|string',
+                'billing_zip' => 'required|string',
+                'billing_phone' => 'required|string',
+            ]);
+
+            $cart = session('cart', []);
+            if (empty($cart)) {
+                return response()->json(['error' => 'Your cart is empty.'], 422);
+            }
+
+            // Calculate totals
+            $subtotal = 0;
+            foreach ($cart as $item) {
+                $subtotal += $item['price'] * $item['quantity'];
+            }
+            $taxRate = 0.05;
+            $tax = round($subtotal * $taxRate, 2);
+            $shipping = 0.00;
+            $total = $subtotal + $tax + $shipping;
+
             $user = auth()->user();
+            
+            // Log the payment attempt
+            \Log::info('Stripe payment attempt', [
+                'user_id' => $user->id,
+                'amount' => $total,
+                'payment_method' => $request->payment_method,
+                'cart_items' => count($cart)
+            ]);
             
             // Charge the user using Cashier
             $payment = $user->charge($total * 100, $request->payment_method, [
@@ -173,6 +184,13 @@ class CheckoutController extends Controller
                     'billing_email' => $request->billing_email,
                 ],
                 'receipt_email' => $request->billing_email,
+            ]);
+
+            // Log successful payment
+            \Log::info('Stripe payment successful', [
+                'user_id' => $user->id,
+                'payment_id' => $payment->id,
+                'amount' => $total
             ]);
 
             // Payment successful, create order
@@ -210,13 +228,71 @@ class CheckoutController extends Controller
             session()->forget('checkout_data');
             
             return response()->json(['success' => true, 'redirect' => route('checkout.thankyou', ['order' => $order->id])]);
+            
         } catch (IncompletePayment $exception) {
+            // Log 3D Secure requirement
+            \Log::info('3D Secure authentication required', [
+                'user_id' => auth()->id(),
+                'payment_intent_id' => $exception->payment->id,
+                'status' => $exception->payment->status
+            ]);
+            
             return response()->json([
                 'requires_action' => true,
-                'payment_intent_client_secret' => $exception->payment->client_secret()
+                'payment_intent_client_secret' => $exception->payment->client_secret(),
+                'message' => '3D Secure authentication required'
             ]);
+            
+        } catch (\Laravel\Cashier\Exceptions\IncompletePayment $exception) {
+            // Alternative way to catch IncompletePayment
+            \Log::info('3D Secure authentication required (alternative)', [
+                'user_id' => auth()->id(),
+                'payment_intent_id' => $exception->payment->id ?? 'unknown',
+                'status' => $exception->payment->status ?? 'unknown'
+            ]);
+            
+            return response()->json([
+                'requires_action' => true,
+                'payment_intent_client_secret' => $exception->payment->client_secret(),
+                'message' => '3D Secure authentication required'
+            ]);
+            
+        } catch (\Stripe\Exception\CardException $e) {
+            // Handle Stripe card errors
+            \Log::error('Stripe card error', [
+                'user_id' => auth()->id(),
+                'error' => $e->getMessage(),
+                'code' => $e->getCode()
+            ]);
+            
+            return response()->json([
+                'error' => 'Card error: ' . $e->getMessage()
+            ], 422);
+            
+        } catch (\Stripe\Exception\InvalidRequestException $e) {
+            // Handle Stripe invalid request errors
+            \Log::error('Stripe invalid request error', [
+                'user_id' => auth()->id(),
+                'error' => $e->getMessage(),
+                'param' => $e->getStripeParam()
+            ]);
+            
+            return response()->json([
+                'error' => 'Invalid payment request: ' . $e->getMessage()
+            ], 422);
+            
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 422);
+            // Handle any other errors
+            \Log::error('Stripe payment error', [
+                'user_id' => auth()->id(),
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
+            
+            return response()->json([
+                'error' => 'Payment failed: ' . $e->getMessage()
+            ], 422);
         }
     }
 }

@@ -15,6 +15,14 @@
                             <span class="font-semibold">Order ID:</span> #{{ $order->id }}<br>
                             <span class="font-semibold">Order Date:</span> {{ $order->created_at->format('d M Y, H:i') }}<br>
                             <span class="font-semibold">Total:</span> ${{ number_format($order->total, 2) }}<br>
+                            <span class="font-semibold">Payment Method:</span> {{ ucfirst($order->payment_method) }}<br>
+                            <span class="font-semibold">Payment Status:</span>
+                            @if($order->stripe_payment_id)
+                                <span class="px-2 py-1 rounded text-xs bg-green-100 text-green-800">Paid via Stripe</span>
+                            @else
+                                <span class="px-2 py-1 rounded text-xs bg-yellow-100 text-yellow-800">Pending/Manual</span>
+                            @endif
+                            <br>
                             <span class="font-semibold">Status:</span>
                             <span class="px-2 py-1 rounded text-xs
                                 @if($order->status == 'completed') bg-green-100 text-green-800

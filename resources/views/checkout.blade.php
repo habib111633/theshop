@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('input[name="payment_method"]').forEach(function(radio) {
             radio.addEventListener('change', function() {
                 const subtotal = parseFloat(document.getElementById('cart-subtotal').textContent.replace('$', '')) || 0;
-                let taxRate = this.value === 'bank' ? 0.04 : 0.17;
+                let taxRate = this.value === 'bank' ? 0.05 : 0.17;
                 const tax = +(subtotal * taxRate).toFixed(2);
                 const shipping = 0.00;
                 const total = +(subtotal + tax + shipping).toFixed(2);
