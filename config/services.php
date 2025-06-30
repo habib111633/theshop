@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Third Party Services
@@ -34,6 +33,6 @@ return [
     'stripe' => [
         'key' => env('STRIPE_KEY', 'pk_test_placeholder'),
         'secret' => env('STRIPE_SECRET', 'sk_test_placeholder'),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
     ],
-
 ];

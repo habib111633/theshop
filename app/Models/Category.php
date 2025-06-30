@@ -13,4 +13,11 @@ class Category extends Model
 
     protected $primaryKey = 'id'; // Should be default
 
+    /**
+     * Get the products for this category
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }

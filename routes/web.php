@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\HomeController;
+
 
 use App\Http\Controllers\ProductController;
 
@@ -14,6 +16,9 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserOrderController;
 use App\Http\Controllers\DashboardController;
+use App\Models\Category;
+use App\Http\Controllers\StripeWebhookController;
+
 
 
 
@@ -29,10 +34,9 @@ use App\Http\Controllers\DashboardController;
 |
  */
 
-Route::get('/', function () {
-return view('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
-})->name('home');
+
 
 Route::get('/shop', [ProductController::class, 'shop'])->name('shop');
 Route::match(['GET', 'POST'], '/shop/filter', [ProductController::class, 'ajaxFilter'])->name('shop.ajax');
@@ -129,5 +133,8 @@ Route::view('/returns', 'returns')->name('returns');
 Route::patch('/products/{product}/stock', [App\Http\Controllers\ProductController::class, 'updateStock'])->name('products.updateStock');
 
 Route::get('/product/{id}/available-stock', [App\Http\Controllers\ProductController::class, 'availableStock']);
+
+// Stripe webhook endpoint
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook']);
 
 require __DIR__ . '/auth.php';

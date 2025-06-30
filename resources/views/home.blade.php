@@ -14,7 +14,7 @@
                     <h2 class="text-3xl md:text-7xl font-bold text-white mb-2 md:mb-4">Women</h2>
                     <p class="mb-4 text-white md:text-2xl">Experience the best in sportswear with <br>our latest
                         collection.</p>
-                    <a href="/"
+                    <a href="{{ route('shop') }}"
                         class="bg-[#ff0042] hover:bg-transparent text-white hover:text-white border border-transparent hover:border-white font-semibold px-4 py-2 rounded-full inline-block">Shop
                         now</a>
                 </div>
@@ -26,7 +26,7 @@
                     <h2 class="text-3xl md:text-7xl font-bold text-white mb-2 md:mb-4">Men</h2>
                     <p class="mb-4 text-white md:text-2xl">Discover the latest trends in Men`s <br>sportswear and
                         casual fashion.</p>
-                    <a href="/"
+                    <a href="{{ route('shop') }}"
                         class="bg-white hover:bg-transparent text-black hover:text-white font-semibold px-4 py-2 rounded-full inline-block border border-transparent hover:border-white">Shop
                         now</a>
                 </div>
@@ -38,7 +38,7 @@
                     <h2 class="text-3xl md:text-7xl font-bold text-white mb-2 md:mb-4">Accessories</h2>
                     <p class="mb-4 text-white md:text-2xl">Elevate your style with our latest <br>sportswear
                         collection.</p>
-                    <a href="/"
+                    <a href="{{ route('shop') }}"
                         class="bg-[#ff0042] hover:bg-transparent text-white hover:text-white border border-transparent hover:border-white font-semibold px-4 py-2 rounded-full inline-block">Shop
                         now</a>
                 </div>
@@ -103,199 +103,43 @@
     </script>
 </section>
 
-<!-- Product banner section -->
-<section id="product-banners">
-    <div class="container mx-auto py-10">
-        <div class="flex flex-wrap">
-            <!-- Category 1 -->
-            <div class="w-full sm:w-1/3 px-4 mb-8">
-                <div class="category-banner relative overflow-hidden rounded-lg shadow-lg group">
-                    <img src="{{ asset('images/cat-image1.jpg') }}" alt="Category 1" class="w-full h-auto">
-                    <div class="absolute inset-0 bg-gray-light/50"></div>
-                    <div class="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4">
-                        <h2 class="text-2xl md:text-3xl font-bold mb-4">Men</h2>
-                        <a href="/"
-                            class="bg-[#ff0042] hover:bg-transparent border border-transparent hover:border-white text-white hover:text-white font-semibold px-4 py-2 rounded-full inline-block">Shop
-                            now</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Category 2 -->
-            <div class="w-full sm:w-1/3 px-4 mb-8">
-                <div class="category-banner relative overflow-hidden rounded-lg shadow-lg group">
-                    <img src="{{ asset('images/cat-image4.jpg') }}" alt="Category 2" class="w-full h-auto">
-                    <div class="absolute inset-0 bg-gray-light/50"></div>
-                    <div
-                        class="category-text absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4 transition duration-300">
-                        <h2 class="text-2xl md:text-3xl font-bold mb-4">Women</h2>
-                        <a href="/"
-                            class="bg-[#ff0042] hover:bg-transparent border border-transparent hover:border-white text-white hover:text-white font-semibold px-4 py-2 rounded-full inline-block">Shop
-                            now</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Category 3 -->
-            <div class="w-full sm:w-1/3 px-4 mb-8">
-                <div class="category-banner relative overflow-hidden rounded-lg shadow-lg group">
-                    <img src="{{ asset('images/cat-image5.jpg') }}" alt="Category 3" class="w-full h-auto">
-                    <div class="absolute inset-0 bg-gray-light/50"></div>
-                    <div
-                        class="category-text absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4 transition duration-300">
-                        <h2 class="text-2xl md:text-3xl font-bold mb-4">Accessories</h2>
-                        <a href="/"
-                            class="bg-[#ff0042] hover:bg-transparent border border-transparent hover:border-white text-white hover:text-white font-semibold px-4 py-2 rounded-full inline-block">Shop
-                            now</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Popular product section -->
-<section id="popular-products">
+@if($categories->count() > 0)
+<!-- Dynamic Category Products Section -->
+@foreach($categories as $category)
+<section id="category-{{ $category->id }}-products" class="py-10">
     <div class="container mx-auto px-4">
-        <h2 class="text-2xl font-bold mb-8">Popular products</h2>
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-2xl font-bold">{{ $category->name }} Products</h2>
+            <a href="{{ route('shop') }}" class="text-[#ff0042] hover:underline font-semibold">View All →</a>
+        </div>
         <div class="flex flex-wrap -mx-4">
-            <!-- Product 1 -->
+            @foreach($category->products as $product)
             <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
                 <div class="bg-white p-3 rounded-lg shadow-lg">
-                    <img src="{{ asset('images/products/1.jpg') }}" alt="Product 1"
-                        class="w-full object-cover mb-4 rounded-lg">
-                    <a href="#" class="text-lg font-semibold mb-2">Summer black dress</a>
-                    <p class="my-2">Women</p>
+                    @if($product->media->first())
+                        <img src="{{ asset('storage/' . $product->media->first()->path) }}" alt="{{ $product->name }}"
+                            class="w-full h-48 object-cover mb-4 rounded-lg">
+                    @else
+                        <img src="{{ asset('images/products/1.jpg') }}" alt="{{ $product->name }}"
+                            class="w-full h-48 object-cover mb-4 rounded-lg">
+                    @endif
+                    <a href="{{ route('product.detail', $product) }}" class="text-lg font-semibold mb-2 block hover:text-[#ff0042]">{{ $product->name }}</a>
+                    <p class="my-2 text-gray-600">{{ $category->name }}</p>
                     <div class="flex items-center mb-4">
-                        <span class="text-lg font-bold text-[#ff0042]">$19.99</span>
-                        <span class="text-sm line-through ml-2">$24.99</span>
+                        <span class="text-lg font-bold text-[#ff0042]">{{ $product->formatted_price }}</span>
                     </div>
-                    <button
-                        class="bg-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] border border-[#ff0042]  font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px]  w-full text-center block">Add
-                        to Cart</button>
+                    <button onclick="addToCart({{ $product->id }})"
+                        class="bg-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] border border-[#ff0042] font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px] w-full text-center block">
+                        Add to Cart
+                    </button>
                 </div>
             </div>
-            <!-- Product 2 -->
-            <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
-                <div class="bg-white p-3 rounded-lg shadow-lg">
-                    <img src="{{ asset('images/products/2.jpg') }}" alt="Product 2"
-                        class="w-full object-cover mb-4 rounded-lg">
-                    <a href="#" class="text-lg font-semibold mb-2">Black suit</a>
-                    <p class=" my-2">Women</p>
-                    <div class="flex items-center mb-4">
-                        <span class="text-lg font-bold text-gray-900">$29.99</span>
-                    </div>
-                    <button
-                        class="bg-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] border border-[#ff0042]  font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px]  w-full text-center block">Add
-                        to Cart</button>
-                </div>
-            </div>
-            <!-- Product 3 -->
-            <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
-                <div class="bg-white p-3 rounded-lg shadow-lg">
-                    <img src="{{ asset('images/products/3.jpg') }}" alt="Product 3"
-                        class="w-full object-cover mb-4 rounded-lg">
-                    <a href="#" class="text-lg font-semibold mb-2">Black long dress</a>
-                    <p class=" my-2">Women, Accessories</p>
-                    <div class="flex items-center mb-4">
-                        <span class="text-lg font-bold text-gray-900">$15.99</span>
-                        <span class="text-sm line-through  ml-2">$19.99</span>
-                    </div>
-                    <button
-                        class="bg-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] border border-[#ff0042]  font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px]  w-full text-center block">Add
-                        to Cart</button>
-                </div>
-            </div>
-            <!-- Product 4 -->
-            <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
-                <div class="bg-white p-3 rounded-lg shadow-lg">
-                    <img src="{{ asset('images/products/4.jpg') }}" alt="Product 4"
-                        class="w-full object-cover mb-4 rounded-lg">
-                    <a href="#" class="text-lg font-semibold">Black leather jacket</a>
-                    <p class="my-2">Women</p>
-                    <div class="flex items-center mb-4">
-                        <span class="text-lg font-bold text-[#ff0042]">$39.99</span>
-                        <span class="text-sm line-through ml-2">$49.99</span>
-                    </div>
-                    <button
-                        class="bg-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] border border-[#ff0042]  font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px]  w-full text-center block">Add
-                        to Cart</button>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
 </section>
-
-<!-- Latest product section -->
-<section id="latest-products" class="py-10">
-    <div class="container mx-auto px-4">
-        <h2 class="text-2xl font-bold mb-8">Latest products</h2>
-        <div class="flex flex-wrap -mx-4">
-            <!-- Product 1 -->
-            <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
-                <div class="bg-white p-3 rounded-lg shadow-lg">
-                    <img src="{{ asset('images/products/5.jpg') }}" alt="Product 1"
-                        class="w-full object-cover mb-4 rounded-lg">
-                    <a href="#" class="text-lg font-semibold mb-2">Blue women's suit</a>
-                    <p class=" my-2">Women</p>
-                    <div class="flex items-center mb-4">
-                        <span class="text-lg font-bold text-[#ff0042]">$19.99</span>
-                        <span class="text-sm line-through ml-2">$24.99</span>
-                    </div>
-                    <button
-                        class="bg-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] border border-[#ff0042]  font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px]  w-full text-center block">Add
-                        to Cart</button>
-                </div>
-            </div>
-            <!-- Product 2 -->
-            <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
-                <div class="bg-white p-3 rounded-lg shadow-lg">
-                    <img src="{{ asset('images/products/6.jpg') }}" alt="Product 2"
-                        class="w-full object-cover mb-4 rounded-lg">
-                    <a href="#" class="text-lg font-semibold mb-2">White shirt with long sleeves</a>
-                    <p class=" my-2">Women</p>
-                    <div class="flex items-center mb-4">
-                        <span class="text-lg font-bold text-gray-900">$29.99</span>
-                    </div>
-                    <button
-                        class="bg-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] border border-[#ff0042]  font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px]  w-full text-center block">Add
-                        to Cart</button>
-                </div>
-            </div>
-            <!-- Product 3 -->
-            <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
-                <div class="bg-white p-3 rounded-lg shadow-lg">
-                    <img src="{{ asset('images/products/7.jpg') }}" alt="Product 3"
-                        class="w-full object-cover mb-4 rounded-lg">
-                    <a href="#" class="text-lg font-semibold mb-2">Yellow men's suit</a>
-                    <p class="my-2">Men</p>
-                    <div class="flex items-center mb-4">
-                        <span class="text-lg font-bold text-gray-900">$15.99</span>
-                        <span class="text-sm line-through  ml-2">$19.99</span>
-                    </div>
-                    <button
-                        class="bg-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] border border-[#ff0042]  font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px]  w-full text-center block">Add
-                        to Cart</button>
-                </div>
-            </div>
-            <!-- Product 4 -->
-            <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
-                <div class="bg-white p-3 rounded-lg shadow-lg">
-                    <img src="{{ asset('images/products/8.jpg') }}" alt="Product 4"
-                        class="w-full object-cover mb-4 rounded-lg">
-                    <a href="#" class="text-lg font-semibold mb-2">Red dress</a>
-                    <p class="my-2">Women</p>
-                    <div class="flex items-center mb-4">
-                        <span class="text-lg font-bold text-[#ff0042]">$39.99</span>
-                        <span class="text-sm line-through ml-2">$49.99</span>
-                    </div>
-                    <button
-                        class="bg-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] border border-[#ff0042]  font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px]  w-full text-center block">Add
-                        to Cart</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
+@endforeach
+@endif
 
 <!-- Banner section -->
 <section id="banner" class="relative my-16">
@@ -305,81 +149,14 @@
         <div class="relative flex flex-col items-center justify-center h-full text-center text-white py-20">
             <h2 class="text-4xl font-bold mb-4">Welcome to Our Shop</h2>
             <div class="flex space-x-4">
-                <a href="#"
+                <a href="{{ route('shop') }}"
                     class="bg-[#ff0042] border border-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] font-semibold px-4 py-2 rounded-full inline-block">Shop
                     Now</a>
-                <a href="#"
+                <a href="{{ route('shop') }}"
                     class="bg-[#ff0042] border border-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] font-semibold px-4 py-2 rounded-full inline-block">New
                     Arrivals</a>
-                <a href="#"
+                <a href="{{ route('shop') }}"
                     class="bg-[#ff0042] border border-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] font-semibold px-4 py-2 rounded-full inline-block">Sale</a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Blog section -->
-<section class="py-16">
-    <div class="text-center mb-12 lg:mb-20">
-        <h2 class="text-5xl font-bold mb-4">Discover <span class="text-[#ff0042]">Our</span> Blog</h2>
-        <p class="my-7">Stay updated with the latest trends, tips, and stories in the world of fashion</p>
-    </div>
-    <div class="relative items-center w-full px-5 py-12 mx-auto md:px-12 lg:px-24 max-w-7xl">
-        <div class="grid w-full grid-cols-1 gap-6 mx-auto lg:grid-cols-3">
-            <div class="flex flex-col p-6 bg-white rounded-xl shadow-lg">
-                <img class="object-cover object-center w-full mb-8 rounded-xl"
-                    src="{{ asset('images/fashion-trends.jpg') }}" alt="blog">
-                <h2 class="mb-2 text-xs font-semibold tracking-widest text-[#ff0042] uppercase">Fashion Trends
-                </h2>
-                <h1 class="mb-4 text-2xl font-semibold leading-none tracking-tighter text-gray-dark lg:text-3xl">
-                    Latest Shirt Trends for 2024</h1>
-                <p class="flex-grow text-base font-medium leading-relaxed text-gray-txt">Explore the hottest
-                    shirt
-                    trends of 2024. From bold prints to classic styles, stay ahead of the fashion curve with
-                    our
-                    expert insights.</p>
-                <div class="mt-8">
-                    <a href="#"
-                        class="bg-[#ff0042] border border-transparent hover:bg-transparent hover:border-[#ff0042] text-white hover:text-[#ff0042] font-semibold py-2 px-4 rounded-full w-full">Read
-                        more</a>
-                </div>
-            </div>
-            <div class="flex flex-col p-6 bg-white rounded-xl shadow-lg">
-                <img class="object-cover object-center w-full mb-8 rounded-xl"
-                    src="{{ asset('images/stylisng-tips.jpg') }}" alt="blog">
-                <h2 class="mb-2 text-xs font-semibold tracking-widest text-[#ff0042] uppercase">Styling Tips
-                </h2>
-                <h1 class="mb-4 text-2xl font-semibold leading-none tracking-tighter text-gray-dark lg:text-3xl">
-                    How
-                    to Style Your Shirt for Any Occasion</h1>
-                <p class="flex-grow text-base font-medium leading-relaxed text-gray-txt">Learn how to style
-                    your
-                    shirt for different occasions, whether it's a casual day out or a formal event. Get tips
-                    from
-                    fashion experts.</p>
-                <div class="mt-8">
-                    <a href="#"
-                        class="bg-[#ff0042] border border-transparent hover:bg-transparent hover:border-[#ff0042] text-white hover:text-[#ff0042] font-semibold py-2 px-4 rounded-full w-full">Read
-                        more</a>
-                </div>
-            </div>
-            <div class="flex flex-col p-6 bg-white rounded-xl shadow-lg">
-                <img class="object-cover object-center w-full mb-8 rounded-xl"
-                    src="{{ asset('images/customer-stories.jpg') }}" alt="blog">
-                <h2 class="mb-2 text-xs font-semibold tracking-widest text-[#ff0042] uppercase">Customer
-                    Stories</h2>
-                <h1 class="mb-4 text-2xl font-semibold leading-none tracking-tighter text-gray-dark lg:text-3xl">
-                    Real Stories from Our Happy Customers</h1>
-                <p class="flex-grow text-base font-medium leading-relaxed text-gray-txt">Read about the
-                    experiences
-                    of our customers. Discover how our shirts have made a difference in their lives and
-                    their
-                    personal style.</p>
-                <div class="mt-8">
-                    <a href="#"
-                        class="bg-[#ff0042] border border-transparent hover:bg-transparent hover:border-[#ff0042] text-white hover:text-[#ff0042] font-semibold py-2 px-4 rounded-full w-full">Read
-                        more</a>
-                </div>
             </div>
         </div>
     </div>
@@ -406,4 +183,37 @@
         </div>
     </div>
 </section>
+
+<script>
+function addToCart(productId) {
+    fetch('/cart/add', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+            product_id: productId,
+            quantity: 1
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update cart count
+            const cartCount = document.querySelector('.cart-count');
+            if (cartCount) {
+                cartCount.textContent = data.cartCount;
+            }
+            alert('Product added to cart successfully!');
+        } else {
+            alert('Failed to add product to cart: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while adding to cart');
+    });
+}
+</script>
 @endsection

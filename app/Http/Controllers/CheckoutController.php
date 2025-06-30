@@ -168,7 +168,7 @@ class CheckoutController extends Controller
             $total = $subtotal + $tax + $shipping;
 
             $user = auth()->user();
-            
+
             // Log the payment attempt
             \Log::info('Stripe payment attempt', [
                 'user_id' => $user->id,
@@ -176,7 +176,7 @@ class CheckoutController extends Controller
                 'payment_method' => $request->payment_method,
                 'cart_items' => count($cart)
             ]);
-            
+
             // Create order FIRST (with pending status)
             $orderData = $request->only([
                 'billing_name', 'billing_email', 'billing_city', 'billing_state', 'billing_zip', 'billing_phone',
@@ -206,7 +206,7 @@ class CheckoutController extends Controller
                     ]);
                 }
             });
-            
+
             // Now try to charge the user
             $payment = $user->charge($total * 100, $request->payment_method, [
                 'description' => 'Order payment',
@@ -234,49 +234,47 @@ class CheckoutController extends Controller
 
             session()->forget('cart');
             session()->forget('checkout_data');
-            
+
             return response()->json(['success' => true, 'redirect' => route('checkout.thankyou', ['order' => $order->id])]);
-            
+
         } catch (IncompletePayment $exception) {
             // Log 3D Secure requirement
             \Log::info('3D Secure authentication required', [
                 'user_id' => auth()->id(),
                 'order_id' => $order->id,
-                'payment_intent_id' => $exception->payment->id,
                 'status' => $exception->payment->status
             ]);
-            
+
             // Clear cart and checkout data since order is created
             session()->forget('cart');
             session()->forget('checkout_data');
-            
+
             return response()->json([
                 'requires_action' => true,
                 'payment_intent_client_secret' => $exception->payment->clientSecret(),
                 'message' => '3D Secure authentication required',
                 'redirect' => route('checkout.thankyou', ['order' => $order->id])
             ]);
-            
+
         } catch (\Laravel\Cashier\Exceptions\IncompletePayment $exception) {
             // Alternative way to catch IncompletePayment
             \Log::info('3D Secure authentication required (alternative)', [
                 'user_id' => auth()->id(),
                 'order_id' => $order->id,
-                'payment_intent_id' => $exception->payment->id ?? 'unknown',
                 'status' => $exception->payment->status ?? 'unknown'
             ]);
-            
+
             // Clear cart and checkout data since order is created
             session()->forget('cart');
             session()->forget('checkout_data');
-            
+
             return response()->json([
                 'requires_action' => true,
                 'payment_intent_client_secret' => $exception->payment->clientSecret(),
                 'message' => '3D Secure authentication required',
                 'redirect' => route('checkout.thankyou', ['order' => $order->id])
             ]);
-            
+
         } catch (\Stripe\Exception\CardException $e) {
             // Handle Stripe card errors
             \Log::error('Stripe card error', [
@@ -284,11 +282,11 @@ class CheckoutController extends Controller
                 'error' => $e->getMessage(),
                 'code' => $e->getCode()
             ]);
-            
+
             return response()->json([
                 'error' => 'Card error: ' . $e->getMessage()
             ], 422);
-            
+
         } catch (\Stripe\Exception\InvalidRequestException $e) {
             // Handle Stripe invalid request errors
             \Log::error('Stripe invalid request error', [
@@ -296,11 +294,11 @@ class CheckoutController extends Controller
                 'error' => $e->getMessage(),
                 'param' => $e->getStripeParam()
             ]);
-            
+
             return response()->json([
                 'error' => 'Invalid payment request: ' . $e->getMessage()
             ], 422);
-            
+
         } catch (\Exception $e) {
             // Handle any other errors
             \Log::error('Stripe payment error', [
@@ -309,7 +307,7 @@ class CheckoutController extends Controller
                 'file' => $e->getFile(),
                 'line' => $e->getLine()
             ]);
-            
+
             return response()->json([
                 'error' => 'Payment failed: ' . $e->getMessage()
             ], 422);
