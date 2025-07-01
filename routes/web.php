@@ -62,7 +62,7 @@ Route::get('/product/{product}', [ProductController::class, 'publicDetail'])->na
 
 
 
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['role:admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 // Admin resources
