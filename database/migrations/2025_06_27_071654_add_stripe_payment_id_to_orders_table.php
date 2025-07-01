@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-            $table->boolean('is_admin')->default(false)->after('password');
+        Schema::table('orders', function (Blueprint $table) {
+            $table->string('stripe_payment_id')->nullable()->after('status');
         });
     }
 
@@ -22,9 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-            $table->dropColumn('is_admin');
+        Schema::table('orders', function (Blueprint $table) {
+            $table->dropColumn('stripe_payment_id');
         });
     }
 };

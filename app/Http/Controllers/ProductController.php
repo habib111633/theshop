@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Services\ProductService;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use Symfony\Component\HttpFoundation\Request;
 
 
 class ProductController extends Controller
@@ -21,8 +22,8 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    
-    
+
+
     public function index()
     {
 $products = Product::all();
@@ -110,4 +111,70 @@ try {
                 ->with('error', 'Failed to delete product: ' . $e->getMessage());
         }
     }
+
+    public function shop()
+{
+$products = Product::with('media', 'category')->paginate(9);
+$products->withPath(route('shop.ajax')); // <-- Add this line
+
+    $categories = Category::all(); // Fetch all categories
+    return view('shop', compact('products','categories'));
+}
+public function ajaxFilter(Request $request)
+{
+
+    $query = Product::with('media', 'category');
+
+    if ($request->has('categories')) {
+$query->whereIn('category_id', $request->input('categories', []));
+
+    }
+
+switch ($request->input('sort')) {
+    case 'az':
+        $query->orderBy('name', 'asc');
+        break;
+    case 'latest':
+    default:
+        $query->orderBy('created_at', 'desc');
+        break;
+}
+
+$products = $query->paginate(9);
+
+// Add all current query parameters to pagination links
+$products->appends($request->except('page'));
+
+
+    return view('partials.products-grid', compact('products'))->render();
+}
+public function publicDetail(Product $product)
+{
+    return view('single-product-page', compact('product'));
+}
+
+public function updateStock(Request $request, Product $product)
+{
+    $request->validate([
+        'stock' => 'required|integer|min:0',
+    ]);
+
+    $product->stock = $request->stock;
+    $product->save();
+
+    return response()->json([
+        'success' => true,
+        'stock' => $product->stock,
+        'message' => 'Stock updated successfully!',
+    ]);
+}
+
+public function availableStock($id)
+{
+    $product = Product::findOrFail($id);
+    $cart = session()->get('cart', []);
+    $cartQty = isset($cart[$id]) ? $cart[$id]['quantity'] : 0;
+    $available = $product->stock - $cartQty;
+    return response()->json(['available_stock' => max(0, $available)]);
+}
 }

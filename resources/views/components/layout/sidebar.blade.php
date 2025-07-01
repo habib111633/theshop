@@ -47,6 +47,12 @@
                     </div>
                 @endif
             </li>
+             <li class="relative">
+                <a href="<?php echo e(route('admin.orders.index')); ?>"
+                    class="flex items-center p-2 rounded hover:bg-gray-100 <?php echo e(request()->routeIs('admin.orders.*') ? 'bg-gray-100 font-medium' : ''); ?> text-gray-700">
+                    Orders
+                </a>
+            </li>
 
             <li class="relative">
     <a href="{{ route('users.index') }}"

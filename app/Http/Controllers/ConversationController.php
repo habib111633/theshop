@@ -21,7 +21,7 @@ class ConversationController extends Controller
             }])
             ->latest('updated_at')
             ->get();
-        
+
 
         $users = User::where('id', '!=', Auth::id())->get();
 

@@ -86,7 +86,7 @@
                                             ${{ number_format($product->price, 2) }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            {{ number_format($product->stock, 0) }} units
+                                            <span id="available-stock-{{ $product->id }}">Loading...</span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <div class="flex justify-center items-center space-x-2">
@@ -165,5 +165,26 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+    function updateAvailableStock(productId) {
+        fetch('/product/' + productId + '/available-stock')
+            .then(response => response.json())
+            .then(data => {
+                let stockElem = document.getElementById('available-stock-' + productId);
+                if (data.available_stock > 0) {
+                    stockElem.textContent = 'In Stock: ' + data.available_stock;
+                } else {
+                    stockElem.textContent = 'Out of Stock';
+                }
+            });
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        @foreach ($products as $product)
+            updateAvailableStock({{ $product->id }});
+        @endforeach
+    });
+    </script>
 
 </x-app-layout>
