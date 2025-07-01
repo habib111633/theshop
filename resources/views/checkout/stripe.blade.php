@@ -274,8 +274,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (result.requires_action) {
                 // Handle 3D Secure authentication
-                console.log('3D Secure authentication required');
-                
                 const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(result.payment_intent_client_secret);
                 
                 if (confirmError) {
