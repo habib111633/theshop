@@ -23,20 +23,13 @@
                                 @foreach ($categories as $category)
                                     <tr class="hover:bg-blue-50">
                                         <td class="border border-gray-300 px-6 py-4">{{ $category->name }}</td>
-                                        <td class="border border-gray-300 px-6 py-4 flex gap-2">
-                                            <a href="{{ route('categories.edit', $category) }}"
-                                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 flex items-center justify-center">
-                                                Edit
-                                            </a>
-                                            <form action="{{ route('categories.destroy', $category) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 transition"
-                                                    onclick="return confirm('Delete {{ $category->name }}?')">
-                                                    Delete
-                                                </button>
-                                            </form>
+                                        <td class="border border-gray-300 px-6 py-4">
+                                            <x-action-buttons
+                                                :edit-url="route('categories.edit', $category)"
+                                                :delete-url="route('categories.destroy', $category)"
+                                                :delete-confirm="'Delete'"
+                                                :delete-name="$category->name"
+                                            />
                                         </td>
                                     </tr>
                                 @endforeach

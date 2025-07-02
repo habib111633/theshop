@@ -186,5 +186,5 @@
         @endforeach
     });
     </script>
-
+@endpush
 </x-app-layout>

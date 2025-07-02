@@ -65,27 +65,25 @@ Route::get('/product/{product}', [ProductController::class, 'publicDetail'])->na
 Route::middleware(['role:admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-// Admin resources
-
-Route::resource('categories', CategoryController::class);
-Route::resource('users', UserController::class);
-
+    // Admin resources
+    Route::resource('categories', CategoryController::class);
+    Route::resource('users', UserController::class);
     Route::resource('products', ProductController::class);
+    Route::resource('roles', \App\Http\Controllers\Admin\RoleController::class);
 
-// Admin-only export routes
-Route::prefix('exports')->group(function () {
-    Route::get('/products', [\App\Http\Controllers\Export\ProductExportController::class, 'export'])
-        ->name('exports.products');
-    Route::get('/products/queued', [\App\Http\Controllers\Export\ProductExportController::class, 'exportQueued'])
-        ->name('exports.products.queued');
-});
+    // Admin-only export routes
+    Route::prefix('exports')->group(function () {
+        Route::get('/products', [\App\Http\Controllers\Export\ProductExportController::class, 'export'])
+            ->name('exports.products');
+        Route::get('/products/queued', [\App\Http\Controllers\Export\ProductExportController::class, 'exportQueued'])
+            ->name('exports.products.queued');
+    });
 
-Route::get('/admin/orders', [OrderController::class, 'index'])->name('admin.orders.index');
-Route::get('/admin/orders/{order}', [OrderController::class, 'show'])->name('admin.orders.show');
-Route::get('/admin/orders/{order}/edit', [OrderController::class, 'edit'])->name('admin.orders.edit');
-Route::put('/admin/orders/{order}', [OrderController::class, 'update'])->name('admin.orders.update');
-Route::delete('/admin/orders/{order}', [OrderController::class, 'destroy'])->name('admin.orders.destroy');
-
+    Route::get('/admin/orders', [OrderController::class, 'index'])->name('admin.orders.index');
+    Route::get('/admin/orders/{order}', [OrderController::class, 'show'])->name('admin.orders.show');
+    Route::get('/admin/orders/{order}/edit', [OrderController::class, 'edit'])->name('admin.orders.edit');
+    Route::put('/admin/orders/{order}', [OrderController::class, 'update'])->name('admin.orders.update');
+    Route::delete('/admin/orders/{order}', [OrderController::class, 'destroy'])->name('admin.orders.destroy');
 });
 
 Route::get('/users/{user}/conversations', [UserController::class, 'conversations'])->name('users.conversations');

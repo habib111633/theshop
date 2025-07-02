@@ -32,7 +32,7 @@ class UpdateUserRequest extends FormRequest
                 Rule::unique('users')->ignore($userId),
             ],
             'password' => 'nullable|min:8|confirmed',
-            'is_admin' => 'boolean',
+            'roles' => 'array',
         ];
     }
 

@@ -1,4 +1,4 @@
-	<x-app-layout>
+    <x-app-layout>
 
 
     <div class="py-6">
@@ -19,6 +19,7 @@
                                     </th>
                                     <th class="border border-gray-300 px-6 py-4 text-left font-semibold">user email
                                     </th>
+                                    <th class="border border-gray-300 px-6 py-4 text-left font-semibold">Roles</th>
                                     <th class="border border-gray-300 px-6 py-4 text-left font-semibold w-36">Actions
                                     </th>
                                 </tr>
@@ -29,19 +30,18 @@
                                         <td class="border border-gray-300 px-6 py-4">{{ $user->id }}</td>
                                         <td class="border border-gray-300 px-6 py-4">{{ $user->name }}</td>
                                         <td class="border border-gray-300 px-6 py-4">{{ $user->email }}</td>
-                                        <td class="border border-gray-300 px-6 py-4 flex gap-2">
-                                            <a href="{{ route('users.edit', $user) }}"
-                                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 flex items-center justify-center">                                                Edit
-                                            </a>
-                                            <form action="{{ route('users.destroy', $user) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 transition"
-                                                    onclick="return confirm('Delete {{ $user->name }}?')">
-                                                    Delete
-                                                </button>
-                                            </form>
+                                        <td class="border border-gray-300 px-6 py-4">
+                                            @foreach($user->roles as $role)
+                                                <span class="inline-block bg-blue-100 text-blue-700 text-xs font-semibold rounded-full px-3 py-1 mr-1 mb-1">{{ ucfirst($role->name) }}</span>
+                                            @endforeach
+                                        </td>
+                                        <td class="border border-gray-300 px-6 py-4">
+                                            <x-action-buttons
+                                                :edit-url="route('users.edit', $user)"
+                                                :delete-url="route('users.destroy', $user)"
+                                                :delete-confirm="'Delete'"
+                                                :delete-name="$user->name"
+                                            />
                                         </td>
                                     </tr>
                                 @endforeach
@@ -52,5 +52,5 @@
             </div>
         </div>
     </div>
-  
+
 </x-app-layout>

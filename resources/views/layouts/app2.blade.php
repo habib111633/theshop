@@ -129,7 +129,8 @@
                     My Orders
         </a>
         @endif
-    @if(auth()->check() && auth()->user()->is_admin)
+
+    @if(auth()->check() && auth()->user()->hasRole('admin'))
         <a href="{{ route('dashboard') }}"
            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition">
             Dashboard

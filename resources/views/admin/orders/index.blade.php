@@ -56,13 +56,13 @@
                             </td>
                             <td class="border px-4 py-2">{{ $order->created_at->format('d M Y, H:i') }}</td>
                             <td class="border px-4 py-2">
-                                <a href="{{ route('admin.orders.show', $order) }}" class="text-blue-600 hover:underline">View</a>
-                                <a href="{{ route('admin.orders.edit', $order) }}" class="text-yellow-600 hover:underline ml-2">Edit</a>
-                                 <form action="{{ route('admin.orders.destroy', $order) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this order?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:underline ml-2">Delete</button>
-                                </form>
+                                <x-admin-order-action-buttons
+                                    :view-url="route('admin.orders.show', $order)"
+                                    :edit-url="route('admin.orders.edit', $order)"
+                                    :delete-url="route('admin.orders.destroy', $order)"
+                                    :delete-confirm="'Are you sure you want to delete this order?'"
+                                    :delete-name="'#' . $order->id"
+                                />
                             </td>
                         </tr>
                         @empty

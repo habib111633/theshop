@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -25,7 +26,8 @@ $users = User::where('id', '!=', auth()->id())->get();
      */
     public function create()
     {
-        return view('users.create');
+        $roles = Role::all();
+        return view('users.create', compact('roles'));
     }
 
     /**
@@ -33,21 +35,15 @@ $users = User::where('id', '!=', auth()->id())->get();
      */
     public function store(StoreUserRequest $request)
     {
-        // Debug the incoming request
-        // \Log::debug('User creation attempt', $request->all());
-
         $validated = $request->validated();
-
-        try {
-            User::create($validated);
-
-            return redirect()->route('users.create')
-                ->with('success', 'User created successfully!');
-
-        } catch (\Exception $e) {
-            // \Log::error('User creation failed: ' . $e->getMessage());
-            return back()->with('error', 'Error: ' . $e->getMessage());
+        $roles = $request->input('roles', []);
+        unset($validated['roles']);
+        $user = User::create($validated);
+        if (!empty($roles)) {
+            $user->assignRole($roles);
         }
+        return redirect()->route('users.create')
+            ->with('success', 'User created successfully!');
     }
     /**
      * Display the specified resource.
@@ -62,7 +58,8 @@ $users = User::where('id', '!=', auth()->id())->get();
      */
     public function edit(User $user)
     {
-        return view('users.edit', compact('user'));
+        $roles = Role::all();
+        return view('users.edit', compact('user', 'roles'));
     }
 
     /**
@@ -70,18 +67,13 @@ $users = User::where('id', '!=', auth()->id())->get();
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        try {
-
-            // Handle password hashing in the model (via mutator)
-            $user->update($request->validated());
-
-            return redirect()->route('users.index')
-                ->with('success', 'User updated successfully!');
-
-        } catch (\Exception $e) {
-            // Log::error("User update failed: {$e->getMessage()}");
-            return back()->with('error', 'Update failed. Please try again.');
-        }
+        $validated = $request->validated();
+        $roles = $request->input('roles', []);
+        unset($validated['roles']);
+        $user->update($validated);
+        $user->syncRoles($roles);
+        return redirect()->route('users.index')
+            ->with('success', 'User updated successfully!');
     }
 
     /**

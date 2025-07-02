@@ -27,23 +27,17 @@
                             <td class="px-4 sm:px-6 py-4 whitespace-nowrap font-medium text-gray-900">#{{ $order->id }}</td>
                             <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $order->created_at->format('M d, Y') }}</td>
                             <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
-                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium {{ 
-                                    $order->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
-                                    ($order->status === 'cancelled' ? 'bg-red-100 text-red-800' : 
-                                    'bg-green-100 text-green-800') 
+                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium {{
+                                    $order->status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                    ($order->status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                                    'bg-green-100 text-green-800')
                                 }}">
                                     {{ ucfirst($order->status) }}
                                 </span>
                             </td>
                             <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${{ number_format($order->total, 2) }}</td>
                             <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-right text-sm">
-                                <a href="{{ route('user.orders.show', $order) }}" 
-                                   class="inline-flex items-center text-[#ff0042] hover:text-[#cc0035] font-medium">
-                                    View
-                                    <svg class="ml-1.5 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                    </svg>
-                                </a>
+                                <x-action-buttons :view-url="route('user.orders.show', $order)" />
                             </td>
                         </tr>
                     @endforeach

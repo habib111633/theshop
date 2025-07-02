@@ -12,7 +12,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, Billable,HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, Billable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -23,7 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'is_admin'
+        // 'is_admin' // removed for Spatie migration
     ];
 
      public function conversations()
@@ -69,7 +69,7 @@ public function orders()
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'is_admin' => 'boolean',
+        // 'is_admin' => 'boolean', // removed for Spatie migration
     ];
 
 

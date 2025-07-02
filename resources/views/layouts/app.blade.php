@@ -94,14 +94,7 @@
         margin-bottom: 10px;
     }
 
-    .form-container button {
-        padding: 10px 15px;
-        background-color: blue;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
+
 /* Your existing CSS remains the same */
     .searchable-select-container {
         position: relative;
