@@ -63,6 +63,10 @@
                 <ul class="flex justify-center space-x-4 text-white">
                     <li><a href="{{ route('home') }}" class="hover:text-[#ff0042] font-semibold">Home</a></li>
                     <li><a href="{{ route('shop') }}" class="hover:text-[#ff0042] font-semibold">Shop</a></li>
+                    @if(auth()->check() && auth()->user()->hasRole('customer'))
+                        <li><a href="{{ route('user.orders.index') }}" class="hover:text-[#ff0042] font-semibold">My Orders</a></li>
+                        <li><a href="{{ route('conversations.index') }}" class="hover:text-[#ff0042] font-semibold">Messages</a></li>
+                    @endif
                     <li class="relative group">
                         <button class="hover:text-[#ff0042] font-semibold focus:outline-none">Help
                             <svg class="w-3 h-3 ml-1 transition-transform group-hover:rotate-180 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -123,12 +127,17 @@
                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition">
                 Profile
             </a>
-            @if(auth()->check() && !auth()->user()->is_admin)
+
+            @if(auth()->check() && auth()->user()->hasRole('customer'))
                 <a href="{{ route('user.orders.index') }}"
                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition">
                     My Orders
-        </a>
-        @endif
+                </a>
+                <a href="{{ route('conversations.index') }}"
+                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition flex items-center">
+                    <i class="fa fa-comments mr-2 text-blue-500"></i> Messages
+                </a>
+            @endif
 
     @if(auth()->check() && auth()->user()->hasRole('admin'))
         <a href="{{ route('dashboard') }}"
@@ -225,6 +234,10 @@ document.addEventListener('DOMContentLoaded', function() {
         <ul class="w-full">
             <li><a href="{{ route('home') }}" class="hover:text-[#ff0042] font-bold block py-2">Home</a></li>
             <li><a href="{{ route('shop') }}" class="hover:text-[#ff0042] font-bold block py-2">Shop</a></li>
+            @if(auth()->check() && auth()->user()->hasRole('customer'))
+                <li><a href="{{ route('user.orders.index') }}" class="hover:text-[#ff0042] font-bold block py-2">My Orders</a></li>
+                <li><a href="{{ route('conversations.index') }}" class="hover:text-[#ff0042] font-bold block py-2">Messages</a></li>
+            @endif
             <li><a href="{{ route('checkout') }}" class="hover:text-[#ff0042] font-bold block py-2">Checkout</a></li>
             <li><a href="{{ route('contact') }}" class="hover:text-[#ff0042] font-bold block py-2">Contact</a></li>
             <li><a href="{{ route('faq') }}" class="hover:text-[#ff0042] font-bold block py-2">FAQ</a></li>
@@ -245,6 +258,8 @@ document.addEventListener('DOMContentLoaded', function() {
             <input type="text" class="w-full p-2 border border-gray-300 rounded" placeholder="Search for products...">
         </div>
     </nav>
+
+    <!-- Main Content -->
     @yield('content')
 
     <!-- Footer -->

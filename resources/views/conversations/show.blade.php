@@ -1,4 +1,9 @@
-<x-app-layout>
+@if (!empty($isCustomer) && $isCustomer)
+    @extends('layouts.app2')
+    @section('content')
+@else
+    <x-app-layout>
+@endif
 
     <div class="py-8">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
@@ -75,4 +80,8 @@
         messageContainer.scrollTop = messageContainer.scrollHeight;
     });
     </script>
-</x-app-layout>
+@if (!empty($isCustomer) && $isCustomer)
+    @endsection
+@else
+    </x-app-layout>
+@endif

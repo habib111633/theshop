@@ -1,4 +1,9 @@
-<x-app-layout>
+@if (!empty($isCustomer) && $isCustomer)
+    @extends('layouts.app2')
+    @section('content')
+@else
+    <x-app-layout>
+@endif
 
 
     <div class="py-8">
@@ -209,4 +214,8 @@
             document.getElementById('user_id').dispatchEvent(new Event('change'));
         }
     </script>
-</x-app-layout>
+@if (!empty($isCustomer) && $isCustomer)
+    @endsection
+@else
+    </x-app-layout>
+@endif

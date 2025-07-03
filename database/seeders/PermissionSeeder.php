@@ -19,30 +19,21 @@ class PermissionSeeder extends Seeder
         // Permissions
         $permissions = [
             // Product management
-            'view products',
-            'create products',
-            'edit products',
-            'delete products',
-
+            'view products', 'create products', 'edit products', 'delete products',
             // Order management
-            'view orders',
-            'update orders',
-            'delete orders',
-
+            'view orders', 'update orders', 'delete orders',
             // User management
-            'view users',
-            'edit users',
-            'delete users',
-
+            'view users', 'edit users', 'delete users',
             // Category management
-            'view categories',
-            'create categories',
-            'edit categories',
-            'delete categories',
-
+            'view categories', 'create categories', 'edit categories', 'delete categories',
+            // Role management
+            'view roles', 'create roles', 'edit roles', 'delete roles',
+            // Conversation management
+            'view conversations', 'create conversations', 'edit conversations', 'delete conversations',
+            // Dashboard
+            'view dashboard',
             // General
-            'place orders',
-            'manage settings',
+            'place orders', 'manage settings',
         ];
 
         foreach ($permissions as $permission) {
@@ -62,15 +53,24 @@ class PermissionSeeder extends Seeder
             'view orders', 'update orders',
             'view categories', 'create categories', 'edit categories', 'delete categories',
             'view users',
+            'view roles',
+            'view conversations',
+            'view dashboard',
         ]);
 
         $customer->givePermissionTo([
             'view products',
             'place orders',
-        ]);
+         ]);
 
         // (Optional) Assign role to a user
         $user = \App\Models\User::find(1);
-        $user->assignRole('admin');
+        $user?->assignRole('admin');
+
+        // Assign 'customer' role to all users who have no role
+        $usersWithoutRole = \App\Models\User::doesntHave('roles')->get();
+        foreach ($usersWithoutRole as $user) {
+            $user->assignRole('customer');
+        }
     }
 }

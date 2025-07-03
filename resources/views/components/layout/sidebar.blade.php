@@ -4,6 +4,7 @@
     </div>
     <nav class="p-4 ">
         <ul class="space-y-2 w-48">
+            @can('view dashboard')
             <li>
                 <a href="{{ route('dashboard') }}"
                     class="flex items-center p-2 rounded hover:bg-gray-100 {{ request()->routeIs('dashboard') ? 'bg-gray-100 font-medium' : '' }} text-gray-700">
@@ -14,6 +15,8 @@
                     Dashboard
                 </a>
             </li>
+            @endcan
+            @can('view categories')
             <li class="relative">
                 <a href="{{ route('categories.index') }}"
                     class="flex items-center p-2 rounded hover:bg-gray-100 {{ request()->routeIs('categories.*') ? 'bg-gray-100 font-medium' : '' }} text-gray-700">
@@ -41,6 +44,8 @@
                     </div>
                 @endif
             </li>
+            @endcan
+            @can('view products')
             <li class="relative">
                 <a href="{{ route('products.index') }}"
                     class="flex items-center p-2 rounded hover:bg-gray-100 {{ request()->routeIs('products.*') ? 'bg-gray-100 font-medium' : '' }} text-gray-700">
@@ -68,6 +73,8 @@
                     </div>
                 @endif
             </li>
+            @endcan
+            @can('view orders')
             <li class="relative">
                 <a href="{{ route('admin.orders.index') }}"
                     class="flex items-center p-2 rounded hover:bg-gray-100 {{ request()->routeIs('admin.orders.*') ? 'bg-gray-100 font-medium' : '' }} text-gray-700">
@@ -78,6 +85,8 @@
                 </a>
             </li>
 
+            @endcan
+            @can('view users')
             <li class="relative">
                 <a href="{{ route('users.index') }}"
                     class="flex items-center p-2 rounded hover:bg-gray-100 {{ request()->routeIs('users.*') ? 'bg-gray-100 font-medium' : '' }} text-gray-700">
@@ -106,6 +115,8 @@
                 @endif
             </li>
 
+            @endcan
+            @can('view conversations')
             <li class="relative">
                 <a href="{{ route('conversations.index') }}"
                     class="flex items-center p-2 rounded hover:bg-gray-100 text-gray-700">
@@ -115,6 +126,8 @@
                     Messages
                 </a>
             </li>
+            @endcan
+            @can('view roles')
             <li class="relative">
                 <a href="{{ route('roles.index') }}"
                     class="flex items-center p-2 rounded hover:bg-gray-100 {{ request()->routeIs('roles.*') ? 'bg-gray-100 font-medium' : '' }} text-gray-700">
@@ -143,6 +156,7 @@
                 @endif
             </li>
 
+            @endcan
             <!-- Add more navigation items as needed -->
         </ul>
     </nav>

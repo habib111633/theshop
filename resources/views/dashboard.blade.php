@@ -101,159 +101,189 @@
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Fallback for non-JS users (server-rendered data)
-        const fallbackSalesLabels = @json($salesLabels ?? []);
-        const fallbackSalesData = @json($salesData ?? []);
-        const fallbackOrdersStatusLabels = @json(array_keys($ordersByStatus ?? []));
-        const fallbackOrdersStatusData = @json(array_values($ordersByStatus ?? []));
-        const fallbackSalesToday = @json($salesToday ?? 0);
-        const fallbackSalesMonth = @json($salesMonth ?? 0);
-        const fallbackSalesTotal = @json($salesTotal ?? 0);
-        const fallbackOrdersByStatus = @json($ordersByStatus ?? []);
-        const fallbackUsersTotal = @json($usersTotal ?? 0);
-        const fallbackUsersNewThisMonth = @json($usersNewThisMonth ?? 0);
-        const fallbackProductsTotal = @json($productsTotal ?? 0);
-        const fallbackProductsLowStock = @json($productsLowStock ?? 0);
-        const fallbackRecentOrders = @json($recentOrders ?? []);
+    // Fallback for non-JS users (server-rendered data)
+    var fallbackSalesLabels = {!! json_encode($salesLabels ?? []) !!};
+    var fallbackSalesData = {!! json_encode($salesData ?? []) !!};
+    var fallbackOrdersStatusLabels = {!! json_encode(array_keys($ordersByStatus ?? [])) !!};
+    var fallbackOrdersStatusData = {!! json_encode(array_values($ordersByStatus ?? [])) !!};
+    var fallbackSalesToday = {!! json_encode($salesToday ?? 0) !!};
+    var fallbackSalesMonth = {!! json_encode($salesMonth ?? 0) !!};
+    var fallbackSalesTotal = {!! json_encode($salesTotal ?? 0) !!};
+    var fallbackOrdersByStatus = {!! json_encode($ordersByStatus ?? []) !!};
+    var fallbackUsersTotal = {!! json_encode($usersTotal ?? 0) !!};
+    var fallbackUsersNewThisMonth = {!! json_encode($usersNewThisMonth ?? 0) !!};
+    var fallbackProductsTotal = {!! json_encode($productsTotal ?? 0) !!};
+    var fallbackProductsLowStock = {!! json_encode($productsLowStock ?? 0) !!};
+    var fallbackRecentOrders = {!! json_encode($recentOrders ?? []) !!};
 
-        function renderCharts(salesLabels, salesData, ordersStatusLabels, ordersStatusData) {
-            // Sales Over Time (Line Chart)
-            const salesCtx = document.getElementById('salesChart').getContext('2d');
-            new Chart(salesCtx, {
-                type: 'line',
-                data: {
-                    labels: salesLabels,
-                    datasets: [{
-                        label: 'Sales',
-                        data: salesData,
+    function renderCharts(salesLabels, salesData, ordersStatusLabels, ordersStatusData) {
+        // Sales Over Time (Line Chart)
+        const salesCtx = document.getElementById('salesChart').getContext('2d');
+        new Chart(salesCtx, {
+            type: 'line',
+            data: {
+                labels: salesLabels,
+                datasets: [{
+                    label: 'Sales',
+                    data: salesData,
+                    borderColor: '#ff0042',
+                    backgroundColor: 'rgba(255,0,66,0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 3,
+                    pointBackgroundColor: '#ff0042',
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#fff',
+                        titleColor: '#222',
+                        bodyColor: '#222',
                         borderColor: '#ff0042',
-                        backgroundColor: 'rgba(255,0,66,0.1)',
-                        tension: 0.4,
-                        fill: true,
-                        pointRadius: 3,
-                        pointBackgroundColor: '#ff0042',
-                    }]
+                        borderWidth: 1,
+                    }
                 },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: '#fff',
-                            titleColor: '#222',
-                            bodyColor: '#222',
-                            borderColor: '#ff0042',
-                            borderWidth: 1,
-                        }
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#888', font: { size: 13 } }
                     },
-                    scales: {
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: '#888', font: { size: 13 } }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: '#f3f3f3' },
-                            ticks: { color: '#888', font: { size: 13 } }
-                        }
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#f3f3f3' },
+                        ticks: { color: '#888', font: { size: 13 } }
                     }
                 }
-            });
-            // Orders by Status (Doughnut Chart)
-            const ordersStatusCtx = document.getElementById('ordersStatusChart').getContext('2d');
-            new Chart(ordersStatusCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ordersStatusLabels,
-                    datasets: [{
-                        data: ordersStatusData,
-                        backgroundColor: [
-                            '#d1d5db', // soft gray (Pending)
-                            '#f59e42', // orange (Processing)
-                            '#22c55e', // green (Completed)
-                            '#ef4444'  // red (Cancelled)
-                        ],
-                        borderWidth: 2,
-                        borderColor: '#fff',
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    cutout: '70%',
-                    plugins: {
-                        legend: { position: 'bottom', labels: { color: '#444', font: { size: 13 } } },
-                        tooltip: {
-                            backgroundColor: '#fff',
-                            titleColor: '#222',
-                            bodyColor: '#222',
-                            borderColor: '#888',
-                            borderWidth: 1,
-                        }
-                    }
-                }
-            });
-        }
-
-        function updateWidgets(data) {
-            // Sales Summary
-            document.getElementById('sales-today').textContent = `$${parseFloat(data.salesToday).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}`;
-            document.getElementById('sales-month').textContent = `$${parseFloat(data.salesMonth).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}`;
-            document.getElementById('sales-total').textContent = `$${parseFloat(data.salesTotal).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}`;
-            // Orders Overview
-            document.getElementById('orders-pending').textContent = data.ordersByStatus['Pending'] ?? 0;
-            document.getElementById('orders-processing').textContent = data.ordersByStatus['Processing'] ?? 0;
-            document.getElementById('orders-completed').textContent = data.ordersByStatus['Completed'] ?? 0;
-            document.getElementById('orders-cancelled').textContent = data.ordersByStatus['Cancelled'] ?? 0;
-            // Users
-            document.getElementById('users-total').textContent = data.usersTotal ?? 0;
-            document.getElementById('users-new-month').textContent = data.usersNewThisMonth ?? 0;
-            // Products
-            document.getElementById('products-total').textContent = data.productsTotal ?? 0;
-            document.getElementById('products-low-stock').textContent = data.productsLowStock ?? 0;
-            // Recent Orders Table
-            const tbody = document.querySelector('#recent-orders-table tbody');
-            tbody.innerHTML = '';
-            (data.recentOrders || []).forEach(order => {
-                let statusClass = '';
-                switch ((order.status || '').toLowerCase()) {
-                    case 'completed': statusClass = 'bg-green-100 text-green-700'; break;
-                    case 'processing': statusClass = 'bg-yellow-100 text-yellow-700'; break;
-                    case 'new': statusClass = 'bg-blue-100 text-blue-700'; break;
-                    default: statusClass = 'bg-red-100 text-red-700'; break;
-                }
-                tbody.innerHTML += `<tr>
-                    <td class="py-2">#${order.id}</td>
-                    <td class="py-2">${order.user?.name ?? 'N/A'}</td>
-                    <td class="py-2"><span class="px-2 py-1 rounded ${statusClass}">${order.status ? order.status.charAt(0).toUpperCase() + order.status.slice(1) : ''}</span></td>
-                    <td class="py-2">$${parseFloat(order.total).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
-                    <td class="py-2">${order.created_at ? order.created_at.substring(0, 10) : ''}</td>
-                </tr>`;
-            });
-        }
-
-        // Use AJAX to fetch data dynamically
-        document.addEventListener('DOMContentLoaded', function() {
-            fetch(window.location.pathname, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-                .then(res => res.json())
-                .then(data => {
-                    renderCharts(data.salesLabels, data.salesData, data.ordersByStatusLabels, data.ordersByStatusData);
-                    updateWidgets(data);
-                })
-                .catch(() => {
-                    // Fallback to server-rendered data if AJAX fails
-                    renderCharts(fallbackSalesLabels, fallbackSalesData, fallbackOrdersStatusLabels, fallbackOrdersStatusData);
-                    updateWidgets({
-                        salesToday: fallbackSalesToday,
-                        salesMonth: fallbackSalesMonth,
-                        salesTotal: fallbackSalesTotal,
-                        ordersByStatus: fallbackOrdersByStatus,
-                        usersTotal: fallbackUsersTotal,
-                        usersNewThisMonth: fallbackUsersNewThisMonth,
-                        productsTotal: fallbackProductsTotal,
-                        productsLowStock: fallbackProductsLowStock,
-                        recentOrders: fallbackRecentOrders,
-                    });
-                });
+            }
         });
+        // Orders by Status (Doughnut Chart)
+        const ordersStatusCtx = document.getElementById('ordersStatusChart').getContext('2d');
+        new Chart(ordersStatusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ordersStatusLabels,
+                datasets: [{
+                    data: ordersStatusData,
+                    backgroundColor: [
+                        '#d1d5db', // soft gray (Pending)
+                        '#f59e42', // orange (Processing)
+                        '#22c55e', // green (Completed)
+                        '#ef4444'  // red (Cancelled)
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff',
+                }]
+            },
+            options: {
+                responsive: true,
+                cutout: '70%',
+                plugins: {
+                    legend: { position: 'bottom', labels: { color: '#444', font: { size: 13 } } },
+                    tooltip: {
+                        backgroundColor: '#fff',
+                        titleColor: '#222',
+                        bodyColor: '#222',
+                        borderColor: '#888',
+                        borderWidth: 1,
+                    }
+                }
+            }
+        });
+    }
+
+    function updateWidgets(data) {
+        // Sales Summary
+        document.getElementById('sales-today').textContent = `$${parseFloat(data.salesToday).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+        document.getElementById('sales-month').textContent = `$${parseFloat(data.salesMonth).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+        document.getElementById('sales-total').textContent = `$${parseFloat(data.salesTotal).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+        // Orders Overview
+        document.getElementById('orders-pending').textContent = data.ordersByStatus['Pending'] ?? 0;
+        document.getElementById('orders-processing').textContent = data.ordersByStatus['Processing'] ?? 0;
+        document.getElementById('orders-completed').textContent = data.ordersByStatus['Completed'] ?? 0;
+        document.getElementById('orders-cancelled').textContent = data.ordersByStatus['Cancelled'] ?? 0;
+        // Users
+        document.getElementById('users-total').textContent = data.usersTotal ?? 0;
+        document.getElementById('users-new-month').textContent = data.usersNewThisMonth ?? 0;
+        // Products
+        document.getElementById('products-total').textContent = data.productsTotal ?? 0;
+        document.getElementById('products-low-stock').textContent = data.productsLowStock ?? 0;
+        // Recent Orders Table
+        const tbody = document.querySelector('#recent-orders-table tbody');
+        tbody.innerHTML = '';
+        (data.recentOrders || []).forEach(order => {
+            let statusClass = '';
+            switch ((order.status || '').toLowerCase()) {
+                case 'completed': statusClass = 'bg-green-100 text-green-700'; break;
+                case 'processing': statusClass = 'bg-yellow-100 text-yellow-700'; break;
+                case 'new': statusClass = 'bg-blue-100 text-blue-700'; break;
+                default: statusClass = 'bg-red-100 text-red-700'; break;
+            }
+            tbody.innerHTML += `<tr>
+                <td class="py-2">#${order.id}</td>
+                <td class="py-2">${order.user?.name ?? 'N/A'}</td>
+                <td class="py-2"><span class="px-2 py-1 rounded ${statusClass}">${order.status ? order.status.charAt(0).toUpperCase() + order.status.slice(1) : ''}</span></td>
+                <td class="py-2">$${parseFloat(order.total).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
+                <td class="py-2">${order.created_at ? order.created_at.substring(0, 10) : ''}</td>
+            </tr>`;
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // If the page is loaded as JSON (e.g. via browser navigation cache), reload to get HTML
+        if (document.contentType === 'application/json' || document.body.innerText.trim().startsWith('{')) {
+            window.location.href = window.location.pathname;
+            return;
+        }
+
+        // AJAX fetch for dashboard data
+        fetch(window.location.pathname, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => {
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                window.location.href = window.location.pathname;
+                return Promise.reject('Invalid content type');
+            }
+            // If response is JSON but not an AJAX request, reload as HTML
+            if (window.location.search.indexOf('force_html') === -1 && response.url === window.location.href && contentType.includes('application/json')) {
+                window.location.href = window.location.pathname + '?force_html=1';
+                return Promise.reject('Force HTML reload');
+            }
+            return response.json();
+        })
+        .then(data => {
+            renderCharts(data.salesLabels, data.salesData, data.ordersByStatusLabels, data.ordersByStatusData);
+            updateWidgets(data);
+        })
+        .catch(error => {
+            // Fallback to server-rendered data if AJAX fails
+            renderCharts(fallbackSalesLabels, fallbackSalesData, fallbackOrdersStatusLabels, fallbackOrdersStatusData);
+            updateWidgets({
+                salesToday: fallbackSalesToday,
+                salesMonth: fallbackSalesMonth,
+                salesTotal: fallbackSalesTotal,
+                ordersByStatus: fallbackOrdersByStatus,
+                usersTotal: fallbackUsersTotal,
+                usersNewThisMonth: fallbackUsersNewThisMonth,
+                productsTotal: fallbackProductsTotal,
+                productsLowStock: fallbackProductsLowStock,
+                recentOrders: fallbackRecentOrders,
+            });
+        });
+
+        // Handle back/forward navigation reliably
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                window.location.href = window.location.pathname;
+            }
+        });
+    });
     </script>
 </x-app-layout>

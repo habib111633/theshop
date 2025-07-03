@@ -11,7 +11,9 @@ class ConversationPolicy
      */
     public function viewAny(User $user): bool
     {
-
+        // Example: allow if user has a permission or role, or just always true for now
+        // return $user->hasPermissionTo('view conversations');
+        return true;
     }
 
     /**
@@ -29,7 +31,8 @@ class ConversationPolicy
      */
     public function create(User $user): bool
     {
-        //
+        // Example: allow all authenticated users to create
+        return true;
     }
 
     /**
@@ -37,7 +40,8 @@ class ConversationPolicy
      */
     public function update(User $user, Conversation $conversation): bool
     {
-        //
+        // Example: allow if user is part of the conversation
+        return $conversation->users->contains($user);
     }
 
     /**
@@ -54,7 +58,8 @@ class ConversationPolicy
      */
     public function restore(User $user, Conversation $conversation): bool
     {
-        //
+        // Example: not implemented, deny by default
+        return false;
     }
 
     /**
@@ -62,6 +67,7 @@ class ConversationPolicy
      */
     public function forceDelete(User $user, Conversation $conversation): bool
     {
-        //
+        // Example: not implemented, deny by default
+        return false;
     }
 }

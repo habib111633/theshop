@@ -14,34 +14,51 @@ class ConversationController extends Controller
 {
     public function index()
     {
+        $user = auth()->user();
+        $user = $user instanceof \App\Models\User ? $user : \App\Models\User::find($user?->id);
         // Fetch conversations for the authenticated user
-        $conversations = Auth::user()->conversations()
-            ->with(['users', 'messages' => function ($query) {
-                $query->latest()->limit(1);
-            }])
-            ->latest('updated_at')
-            ->get();
+        $conversations = $user ? $user->conversations()
+                ->with(['users', 'messages' => function ($query) {
+                    $query->latest()->limit(1);
+                }])
+                ->latest('updated_at')
+                ->get()
+            : collect();
 
+        $users = User::where('id', '!=', $user ? $user->id : 0)->get();
 
-        $users = User::where('id', '!=', Auth::id())->get();
-
-        return view('conversations.index', compact('conversations', 'users'));
+        // Use customer layout if user has customer role
+        // For customers use Blade layout, for admin use Blade component
+        $isCustomer = $user && $user->hasRole('customer');
+        return view('conversations.index', [
+            'conversations' => $conversations,
+            'users' => $users,
+            'isCustomer' => $isCustomer
+        ]);
     }
 // With  Route model binding Laravel automatically fetch the
 // Conversation model from the database using the ID in the URL and give it to your controller method.
-public function show(Conversation $conversation)
+    public function show(Conversation $conversation)
     {
         $this->authorize('view', $conversation);
 
+        $user = auth()->user();
+        $user = $user instanceof \App\Models\User ? $user : \App\Models\User::find($user?->id);
         $messages = $conversation->messages()->with('user')->oldest()->get();
 
         // Mark messages as read
         $conversation->messages()
-            ->where('user_id', '!=', Auth::id())
+            ->where('user_id', '!=', $user ? $user->id : 0)
             ->where('read', false)
             ->update(['read' => true]);
 
-        return view('conversations.show', compact('conversation', 'messages'));
+        // Use customer layout if user has customer role
+        $isCustomer = $user && $user->hasRole('customer');
+        return view('conversations.show', [
+            'conversation' => $conversation,
+            'messages' => $messages,
+            'isCustomer' => $isCustomer
+        ]);
     }
 
     public function store(Request $request)
@@ -51,11 +68,15 @@ public function show(Conversation $conversation)
         ]);
 
         // Check if conversation already exists
-        $conversation = Auth::user()->conversations()
-            ->whereHas('users', function ($query) use ($request) {
-                $query->where('user_id', $request->user_id);
-            })
-            ->first();
+        $user = auth()->user();
+        $user = $user instanceof \App\Models\User ? $user : \App\Models\User::find($user?->id);
+        $conversation = $user
+            ? $user->conversations()
+                ->whereHas('users', function ($query) use ($request) {
+                    $query->where('user_id', $request->user_id);
+                })
+                ->first()
+            : null;
         // If conversation does not exist, create a new one
 
         if (! $conversation) {
