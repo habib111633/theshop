@@ -12,6 +12,12 @@ use App\Notifications\MessageNotification;
 
 class ConversationController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:view conversations')->only(['index', 'show']);
+        $this->middleware('can:create conversations')->only(['store']);
+        $this->middleware('can:delete conversations')->only(['destroy']);
+    }
     public function index()
     {
         $user = auth()->user();

@@ -9,6 +9,13 @@ use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view roles,web')->only('index');
+        $this->middleware('permission:create roles,web')->only(['create', 'store']);
+        $this->middleware('permission:edit roles,web')->only(['edit', 'update']);
+        $this->middleware('permission:delete roles,web')->only(['destroy']);
+    }
     /**
      * Display a listing of the resource.
      */

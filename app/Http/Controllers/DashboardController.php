@@ -12,6 +12,10 @@ use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:view dashboard')->only(['index']);
+    }
     public function index(Request $request)
     {
         // Sales for the last 7 days

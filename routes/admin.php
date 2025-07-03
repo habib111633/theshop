@@ -1,5 +1,7 @@
 <?php
 
+
+
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
@@ -8,8 +10,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'role:admin|manager|worker'])
-    ->prefix('admin')
+Route::prefix('admin')
     ->name('admin.')
     ->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

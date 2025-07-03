@@ -12,12 +12,14 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ProductController extends Controller
 {
-
     protected $ProductService;
     public function __construct(ProductService $ProductService)
     {
         $this->ProductService = $ProductService;
-
+        $this->middleware('can:view products')->only(['index', 'show']);
+        $this->middleware('can:create products')->only(['create', 'store']);
+        $this->middleware('can:update products')->only(['edit', 'update']);
+        $this->middleware('can:delete products')->only(['destroy']);
     }
     /**
      * Display a listing of the resource.

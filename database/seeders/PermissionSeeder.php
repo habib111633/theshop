@@ -19,17 +19,17 @@ class PermissionSeeder extends Seeder
         // Permissions
         $permissions = [
             // Product management
-            'view products', 'create products', 'edit products', 'delete products',
+            'view products', 'create products', 'edit products', 'update products', 'delete products',
             // Order management
-            'view orders', 'update orders', 'delete orders',
+            'view orders', 'edit orders', 'update orders', 'delete orders',
             // User management
-            'view users', 'edit users', 'delete users',
+            'view users', 'create users', 'edit users', 'update users', 'delete users',
             // Category management
-            'view categories', 'create categories', 'edit categories', 'delete categories',
+            'view categories', 'create categories', 'edit categories', 'update categories', 'delete categories',
             // Role management
-            'view roles', 'create roles', 'edit roles', 'delete roles',
+            'view roles', 'create roles', 'edit roles', 'update roles', 'delete roles',
             // Conversation management
-            'view conversations', 'create conversations', 'edit conversations', 'delete conversations',
+            'view conversations', 'create conversations', 'edit conversations', 'update conversations', 'delete conversations',
             // Dashboard
             'view dashboard',
             // General

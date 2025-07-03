@@ -6,6 +6,12 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:view orders')->only(['index', 'show']);
+        $this->middleware('can:update orders')->only(['edit', 'update']);
+        $this->middleware('can:delete orders')->only(['destroy']);
+    }
     public function index(Request $request)
     {
         $query = Order::with('user');
