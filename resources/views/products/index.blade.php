@@ -17,7 +17,7 @@
 
                                 <!-- Right side - Action Buttons -->
                                 <div class="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-3">
-                                    <a href="{{ route('products.create') }}"
+                                    <a href="{{ route('admin.products.create') }}"
                                         class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg transition duration-200 inline-flex items-center justify-center shadow-sm hover:shadow-md">
                                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -26,7 +26,7 @@
                                         Add Product
                                     </a>
 
-                                    <a href="{{ route('exports.products') }}"
+                                    <a href="{{ route('admin.exports.products') }}"
                                         class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg transition duration-200 inline-flex items-center justify-center shadow-sm hover:shadow-md">
                                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -92,7 +92,7 @@
                                             <div class="flex justify-center items-center space-x-2">
                                                 <!-- View Button with Tooltip -->
                                                 <div class="relative group">
-                                                    <a href="{{ route('products.show', $product) }}"
+                                                    <a href="{{ route('admin.products.show', $product) }}"
                                                         class="text-blue-500 hover:text-blue-700 transition-colors duration-200">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -111,7 +111,7 @@
 
                                                 <!-- Edit Button with Tooltip -->
                                                 <div class="relative group">
-                                                    <a href="{{ route('products.edit', $product) }}"
+                                                    <a href="{{ route('admin.products.edit', $product) }}"
                                                         class="text-indigo-500 hover:text-indigo-700 transition-colors duration-200">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
                                                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -128,7 +128,7 @@
 
                                                 <!-- Delete Button with Tooltip -->
                                                 <div class="relative group">
-                                                    <form action="{{ route('products.destroy', $product) }}"
+                                                    <form action="{{ route('admin.products.destroy', $product) }}"
                                                         method="POST" class="inline">
                                                         @csrf
                                                         @method('DELETE')

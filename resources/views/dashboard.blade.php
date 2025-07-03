@@ -90,9 +90,15 @@
                 <!-- Quick Links Widget -->
                 <div class="bg-white shadow rounded-lg p-6 flex flex-col gap-4">
                     <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
-                    <a href="{{ route('products.create') }}" class="bg-[#ff0042] text-white px-4 py-2 rounded font-semibold text-center hover:bg-opacity-90 transition">Add Product</a>
+                    @can('create products')
+                    <a href="{{ route('admin.products.create') }}" class="bg-[#ff0042] text-white px-4 py-2 rounded font-semibold text-center hover:bg-opacity-90 transition">Add Product</a>
+                    @endcan
+                    @can('view orders')
                     <a href="{{ route('admin.orders.index') }}" class="bg-gray-100 text-gray-800 px-4 py-2 rounded font-semibold text-center hover:bg-gray-200 transition">View Orders</a>
-                    <a href="{{ route('users.index') }}" class="bg-gray-100 text-gray-800 px-4 py-2 rounded font-semibold text-center hover:bg-gray-200 transition">Manage Users</a>
+                    @endcan
+                    @can('view users')
+                    <a href="{{ route('admin.users.index') }}" class="bg-gray-100 text-gray-800 px-4 py-2 rounded font-semibold text-center hover:bg-gray-200 transition">Manage Users</a>
+                    @endcan
                     <a href="{{ route('shop') }}" class="bg-gray-100 text-gray-800 px-4 py-2 rounded font-semibold text-center hover:bg-gray-200 transition">View Shop</a>
                 </div>
             </div>
@@ -102,19 +108,19 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
     // Fallback for non-JS users (server-rendered data)
-    var fallbackSalesLabels = {!! json_encode($salesLabels ?? []) !!};
-    var fallbackSalesData = {!! json_encode($salesData ?? []) !!};
-    var fallbackOrdersStatusLabels = {!! json_encode(array_keys($ordersByStatus ?? [])) !!};
-    var fallbackOrdersStatusData = {!! json_encode(array_values($ordersByStatus ?? [])) !!};
-    var fallbackSalesToday = {!! json_encode($salesToday ?? 0) !!};
-    var fallbackSalesMonth = {!! json_encode($salesMonth ?? 0) !!};
-    var fallbackSalesTotal = {!! json_encode($salesTotal ?? 0) !!};
-    var fallbackOrdersByStatus = {!! json_encode($ordersByStatus ?? []) !!};
-    var fallbackUsersTotal = {!! json_encode($usersTotal ?? 0) !!};
-    var fallbackUsersNewThisMonth = {!! json_encode($usersNewThisMonth ?? 0) !!};
-    var fallbackProductsTotal = {!! json_encode($productsTotal ?? 0) !!};
-    var fallbackProductsLowStock = {!! json_encode($productsLowStock ?? 0) !!};
-    var fallbackRecentOrders = {!! json_encode($recentOrders ?? []) !!};
+    const fallbackSalesLabels = {!! json_encode($salesLabels ?? []) !!};
+    const fallbackSalesData = {!! json_encode($salesData ?? []) !!};
+    const fallbackOrdersStatusLabels = {!! json_encode(array_keys($ordersByStatus ?? [])) !!};
+    const fallbackOrdersStatusData = {!! json_encode(array_values($ordersByStatus ?? [])) !!};
+    const fallbackSalesToday = {!! json_encode($salesToday ?? 0) !!};
+    const fallbackSalesMonth = {!! json_encode($salesMonth ?? 0) !!};
+    const fallbackSalesTotal = {!! json_encode($salesTotal ?? 0) !!};
+    const fallbackOrdersByStatus = {!! json_encode($ordersByStatus ?? []) !!};
+    const fallbackUsersTotal = {!! json_encode($usersTotal ?? 0) !!};
+    const fallbackUsersNewThisMonth = {!! json_encode($usersNewThisMonth ?? 0) !!};
+    const fallbackProductsTotal = {!! json_encode($productsTotal ?? 0) !!};
+    const fallbackProductsLowStock = {!! json_encode($productsLowStock ?? 0) !!};
+    const fallbackRecentOrders = {!! json_encode($recentOrders ?? []) !!};
 
     function renderCharts(salesLabels, salesData, ordersStatusLabels, ordersStatusData) {
         // Sales Over Time (Line Chart)

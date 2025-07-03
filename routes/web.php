@@ -1,13 +1,11 @@
+
 <?php
 
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
-
-
 use App\Http\Controllers\ProductController;
-
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ConversationController;
@@ -19,120 +17,83 @@ use App\Http\Controllers\DashboardController;
 use App\Models\Category;
 use App\Http\Controllers\StripeWebhookController;
 
-
-
-
-
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| Public Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
- */
-
+*/
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
-
-
 Route::get('/shop', [ProductController::class, 'shop'])->name('shop');
 Route::match(['GET', 'POST'], '/shop/filter', [ProductController::class, 'ajaxFilter'])->name('shop.ajax');
-
-
-
-
-Route::middleware(['auth'])->group(function () {
-    Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout');
-    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
-    Route::get('/checkout/thankyou/{order}', [CheckoutController::class, 'thankyou'])->name('checkout.thankyou');
-    Route::get('/checkout/stripe', [CheckoutController::class, 'stripe'])->name('checkout.stripe');
-    Route::post('/checkout/stripe/confirm', [CheckoutController::class, 'stripeConfirm'])->name('checkout.stripe.confirm');
-});
-
-Route::get('/cart', function () {
-    return view('cart');
-})->name('cart');
-Route::get('/product-detail', function () {
-    return view('single-product-page');
-})->name('product-detail');
+Route::get('/product-detail', fn() => view('single-product-page'))->name('product-detail');
 Route::get('/product/{product}', [ProductController::class, 'publicDetail'])->name('product.detail');
-
-
-
-Route::middleware(['role:admin'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-    // Admin resources
-    Route::resource('categories', CategoryController::class);
-    Route::resource('users', UserController::class);
-    Route::resource('products', ProductController::class);
-    Route::resource('roles', \App\Http\Controllers\Admin\RoleController::class);
-
-    // Admin-only export routes
-    Route::prefix('exports')->group(function () {
-        Route::get('/products', [\App\Http\Controllers\Export\ProductExportController::class, 'export'])
-            ->name('exports.products');
-        Route::get('/products/queued', [\App\Http\Controllers\Export\ProductExportController::class, 'exportQueued'])
-            ->name('exports.products.queued');
-    });
-
-    Route::get('/admin/orders', [OrderController::class, 'index'])->name('admin.orders.index');
-    Route::get('/admin/orders/{order}', [OrderController::class, 'show'])->name('admin.orders.show');
-    Route::get('/admin/orders/{order}/edit', [OrderController::class, 'edit'])->name('admin.orders.edit');
-    Route::put('/admin/orders/{order}', [OrderController::class, 'update'])->name('admin.orders.update');
-    Route::delete('/admin/orders/{order}', [OrderController::class, 'destroy'])->name('admin.orders.destroy');
-});
-
-Route::get('/users/{user}/conversations', [UserController::class, 'conversations'])->name('users.conversations');
-Route::get('/users/{user}/conversations/{conversation}', [UserController::class, 'showConversation'])->name('users.conversation.show');
-Route::get('/users/{user}/conversations/{conversation}/messages', [UserController::class, 'showMessages'])->name('users.conversation.messages');
-
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-Route::middleware(['auth'])->group(function () {
-    Route::get('/conversations', [ConversationController::class, 'index'])->name('conversations.index');
-    Route::get('/conversations/{conversation}', [ConversationController::class, 'show'])->name('conversations.show');
-    Route::post('/conversations', [ConversationController::class, 'store'])->name('conversations.store');
-    Route::post('/conversations/{conversation}/messages', [ConversationController::class, 'sendMessage'])->name('conversations.messages.store');
-    Route::delete('/conversations/{conversation}', [ConversationController::class, 'destroy'])->name('conversations.destroy');
-
-});
-
-Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
-Route::get('/cart/preview', [CartController::class, 'preview'])->name('cart.preview');
-Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
-Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
-Route::get('/cart', function () {
-    return view('cart');
-})->name('cart');
-
-
-
-Route::middleware(['auth'])->group(function () {
-    Route::get('/my-orders', [UserOrderController::class, 'index'])->name('user.orders.index');
-    Route::get('/my-orders/{order}', [UserOrderController::class, 'show'])->name('user.orders.show');
-    Route::post('/my-orders/{order}/cancel', [UserOrderController::class, 'cancel'])->name('user.orders.cancel');
-    Route::get('/my-orders/{order}/invoice', [UserOrderController::class, 'invoice'])->name('user.orders.invoice');
-});
-
 Route::view('/contact', 'contact')->name('contact');
 Route::view('/faq', 'faq')->name('faq');
 Route::view('/support', 'support')->name('support');
 Route::view('/returns', 'returns')->name('returns');
 
-Route::patch('/products/{product}/stock', [App\Http\Controllers\ProductController::class, 'updateStock'])->name('products.updateStock');
+/*
+|--------------------------------------------------------------------------
+| Cart Routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/cart', fn() => view('cart'))->name('cart');
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::get('/cart/preview', [CartController::class, 'preview'])->name('cart.preview');
+Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
 
-Route::get('/product/{id}/available-stock', [App\Http\Controllers\ProductController::class, 'availableStock']);
+/*
+|--------------------------------------------------------------------------
+| Product Stock/AJAX Routes
+|--------------------------------------------------------------------------
+*/
+Route::patch('/products/{product}/stock', [ProductController::class, 'updateStock'])->name('products.updateStock');
+Route::get('/product/{id}/available-stock', [ProductController::class, 'availableStock']);
 
-// Stripe webhook endpoint
+/*
+|--------------------------------------------------------------------------
+| Checkout, Profile, and Conversations (Authenticated)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth'])->group(function () {
+    // Checkout
+    Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout');
+    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+    Route::get('/checkout/thankyou/{order}', [CheckoutController::class, 'thankyou'])->name('checkout.thankyou');
+    Route::get('/checkout/stripe', [CheckoutController::class, 'stripe'])->name('checkout.stripe');
+    Route::post('/checkout/stripe/confirm', [CheckoutController::class, 'stripeConfirm'])->name('checkout.stripe.confirm');
+    // Profile
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // User's own conversations
+    Route::get('/conversations', [ConversationController::class, 'index'])->name('conversations.index');
+    Route::get('/conversations/{conversation}', [ConversationController::class, 'show'])->name('conversations.show');
+    Route::post('/conversations', [ConversationController::class, 'store'])->name('conversations.store');
+    Route::post('/conversations/{conversation}/messages', [ConversationController::class, 'sendMessage'])->name('conversations.messages.store');
+    Route::delete('/conversations/{conversation}', [ConversationController::class, 'destroy'])->name('conversations.destroy');
+});
+
+/*
+|--------------------------------------------------------------------------
+| User-to-User Conversation Routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/users/{user}/conversations', [UserController::class, 'conversations'])->name('users.conversations');
+Route::get('/users/{user}/conversations/{conversation}', [UserController::class, 'showConversation'])->name('users.conversation.show');
+Route::get('/users/{user}/conversations/{conversation}/messages', [UserController::class, 'showMessages'])->name('users.conversation.messages');
+
+/*
+|--------------------------------------------------------------------------
+| Stripe Webhook Endpoint
+|--------------------------------------------------------------------------
+*/
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook']);
+
+// Admin routes moved to routes/admin.php
+// Customer routes moved to routes/customer.php
+
+require __DIR__ . '/auth.php';
 
 require __DIR__ . '/auth.php';

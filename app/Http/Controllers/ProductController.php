@@ -53,7 +53,7 @@ $product = $this->ProductService->createProduct(
     $request->file('image')
 );
 
-return redirect()->route('products.index')
+return redirect()->route('admin.products.index')
     ->with('success', 'Product created!');
 
     }
@@ -87,7 +87,7 @@ return view('products.create', compact('product', 'categories'));
         //
 try {
     $this->ProductService->updateProduct($product, $request->validated(), $request->file('image'));
-    return redirect()->route('products.index')
+    return redirect()->route('admin.products.index')
         ->with('success', 'Product updated successfully!');
 } catch (\Exception $e) {
     return redirect()->route('products.index')

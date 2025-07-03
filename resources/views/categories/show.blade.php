@@ -25,9 +25,9 @@
                     <tr>
                         <td>{{ $category->name }}</td>
                         <td>
-                            <a href="{{ route('categories.edit', $category) }}" class="btn btn-edit">Edit</a>
+                            <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-edit">Edit</a>
 
-                            <form action="{{ route('categories.destroy', $category) }}" method="POST" class="inline-form">
+                            <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" class="inline-form">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-delete"

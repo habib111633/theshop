@@ -39,7 +39,7 @@ class UserOrderController extends Controller
             $order->save();
         });
         // Optionally notify admin here
-        return redirect()->route('user.orders.index')->with('success', 'Order cancelled.');
+        return redirect()->route('customer.orders.index')->with('success', 'Order cancelled.');
     }
 
     public function invoice(Order $order)
@@ -54,6 +54,6 @@ class UserOrderController extends Controller
                                         ->setOption('margin-bottom', 0)
                                         ->setOption('margin-left', 0);
         return $pdf->download('invoice-order-' . $order->id . '.pdf');
-        
+
     }
 }

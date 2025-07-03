@@ -15,7 +15,6 @@ class ConversationController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $user = $user instanceof \App\Models\User ? $user : \App\Models\User::find($user?->id);
         // Fetch conversations for the authenticated user
         $conversations = $user ? $user->conversations()
                 ->with(['users', 'messages' => function ($query) {

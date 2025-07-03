@@ -9,9 +9,9 @@
                         <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                             <h2 class="text-2xl font-semibold text-gray-800">Product Details</h2>
                             <div>
-                                <a href="{{ route('products.edit', $product) }}"
+                                <a href="{{ route('admin.products.edit', $product) }}"
                                     class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-300 mr-2">Edit</a>
-                                <form action="{{ route('products.destroy', $product) }}" method="POST" class="inline">
+                                <form action="{{ route('admin.products.destroy', $product) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"

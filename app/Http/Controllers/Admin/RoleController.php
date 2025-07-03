@@ -43,7 +43,7 @@ class RoleController extends Controller
             $role->syncPermissions($request->permissions);
         }
 
-        return redirect()->route('roles.index')->with('success', 'Role created successfully.');
+        return redirect()->route('admin.roles.index')->with('success', 'Role created successfully.');
     }
 
     /**
@@ -78,12 +78,12 @@ class RoleController extends Controller
         ]);
         // Only update permissions, not name, for super-admin
         if ($role->name === 'super-admin') {
-            return redirect()->route('roles.index')->with('error', 'The super-admin role cannot be modified.');
+            return redirect()->route('admin.roles.index')->with('error', 'The super-admin role cannot be modified.');
         }
         $role->update(['name' => $request->name]);
         $role->syncPermissions($request->permissions ?? []);
 
-        return redirect()->route('roles.index')->with('success', 'Role updated successfully.');
+        return redirect()->route('admin.roles.index')->with('success', 'Role updated successfully.');
     }
 
     /**
@@ -93,10 +93,10 @@ class RoleController extends Controller
     {
         $role = Role::findOrFail($id);
         if ($role->name === 'super-admin') {
-            return redirect()->route('roles.index')->with('error', 'The super-admin role cannot be deleted.');
+            return redirect()->route('admin.roles.index')->with('error', 'The super-admin role cannot be deleted.');
         }
         $role->delete();
 
-        return redirect()->route('roles.index')->with('success', 'Role deleted successfully.');
+        return redirect()->route('admin.roles.index')->with('success', 'Role deleted successfully.');
     }
 }

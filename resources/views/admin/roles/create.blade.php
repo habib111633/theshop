@@ -7,7 +7,7 @@
     <div class="py-6">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-md rounded-lg p-6">
-                <form action="{{ route('roles.store') }}" method="POST">
+                <form action="{{ route('admin.roles.store') }}" method="POST">
                     @csrf
                     <div class="mb-4">
                         <label for="name" class="block text-gray-700 font-semibold mb-2">Role Name</label>
@@ -27,7 +27,7 @@
                     </div>
                     <div class="flex justify-end gap-2">
                         <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Create</button>
-                        <a href="{{ route('roles.index') }}" class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400">Cancel</a>
+                        <a href="{{ route('admin.roles.index') }}" class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400">Cancel</a>
                     </div>
                 </form>
             </div>

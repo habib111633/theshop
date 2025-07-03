@@ -10,7 +10,9 @@
             <div class="bg-white shadow-md rounded-lg p-6">
                 <div class="flex justify-between items-center mb-4">
                     <h1 class="text-2xl font-bold">Roles</h1>
-                    <a href="{{ route('roles.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Create Role</a>
+                    @can('create roles')
+                    <a href="{{ route('admin.roles.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Create Role</a>
+                    @endcan
                 </div>
                 @if(session('success'))
                     <div class="alert alert-success mb-4">{{ session('success') }}</div>
@@ -33,12 +35,14 @@
                                 @endforeach
                             </td>
                             <td class="border px-4 py-2 whitespace-nowrap">
-                                <x-role-action-buttons
-                                    :edit-url="route('roles.edit', $role)"
-                                    :delete-url="route('roles.destroy', $role)"
-                                    :delete-confirm="'Are you sure you want to delete this role?'"
-                                    :delete-name="$role->name"
-                                />
+                                @canany(['edit roles', 'delete roles'])
+                                    <x-role-action-buttons
+                                        :edit-url="route('admin.roles.edit', $role)"
+                                        :delete-url="route('admin.roles.destroy', $role)"
+                                        :delete-confirm="'Are you sure you want to delete this role?'"
+                                        :delete-name="$role->name"
+                                    />
+                                @endcanany
                             </td>
                         </tr>
                         @empty

@@ -28,7 +28,7 @@
                     Download Invoice
                 </a>
             </div>
-            
+
             <div class="mt-4 grid grid-cols-2 gap-4">
                 <div>
                     <p class="text-sm text-gray-500">Subtotal</p>
@@ -81,13 +81,13 @@
 
         <!-- Order Actions -->
         <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <a href="{{ route('user.orders.index') }}" class="flex items-center text-[#ff0042] hover:text-[#cc0035] font-medium transition">
+            <a href="{{ route('customer.orders.index') }}" class="flex items-center text-[#ff0042] hover:text-[#cc0035] font-medium transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
                 Back to Orders
             </a>
-            
+
             @if($order->status === 'pending')
             <form method="POST" action="{{ route('user.orders.cancel', $order) }}" class="w-full sm:w-auto">
                 @csrf

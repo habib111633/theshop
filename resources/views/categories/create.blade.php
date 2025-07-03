@@ -15,7 +15,7 @@
 
                         <div class="form-container">
 
-                            <form action="{{ route('categories.store') }}" method="POST">
+                            <form action="{{ route('admin.categories.store') }}" method="POST">
 
                                 @csrf <!-- CSRF Protection -->
                                 <input type="text" placeholder="Enter category name" name='name'>

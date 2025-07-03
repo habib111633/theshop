@@ -1,7 +1,16 @@
-@props(['viewUrl' => null, 'editUrl' => null, 'deleteUrl' => null, 'deleteConfirm' => 'Are you sure?', 'deleteName' => null])
+@props([
+    'viewUrl' => null,
+    'editUrl' => null,
+    'deleteUrl' => null,
+    'deleteConfirm' => 'Are you sure?',
+    'deleteName' => null,
+    'viewPermission' => null,
+    'editPermission' => null,
+    'deletePermission' => null
+])
 <div class="flex justify-center items-center space-x-2">
-    @if($viewUrl)
-        @can('view products')
+    @if($viewUrl && $viewPermission)
+        @can($viewPermission)
         <div class="relative group">
             <a href="{{ $viewUrl }}" class="text-blue-500 hover:text-blue-700 transition-colors duration-200">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -13,8 +22,8 @@
         </div>
         @endcan
     @endif
-    @if($editUrl)
-        @can('edit products')
+    @if($editUrl && $editPermission)
+        @can($editPermission)
         <div class="relative group">
             <a href="{{ $editUrl }}" class="text-indigo-500 hover:text-indigo-700 transition-colors duration-200">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -25,8 +34,8 @@
         </div>
         @endcan
     @endif
-    @if($deleteUrl)
-        @can('delete products')
+    @if($deleteUrl && $deletePermission)
+        @can($deletePermission)
         <div class="relative group">
             <form action="{{ $deleteUrl }}" method="POST" class="inline">
                 @csrf

@@ -42,7 +42,7 @@ $users = User::where('id', '!=', auth()->id())->get();
         if (!empty($roles)) {
             $user->assignRole($roles);
         }
-        return redirect()->route('users.create')
+        return redirect()->route('admin.users.create')
             ->with('success', 'User created successfully!');
     }
     /**
@@ -72,7 +72,7 @@ $users = User::where('id', '!=', auth()->id())->get();
         unset($validated['roles']);
         $user->update($validated);
         $user->syncRoles($roles);
-        return redirect()->route('users.index')
+        return redirect()->route('admin.users.index')
             ->with('success', 'User updated successfully!');
     }
 
@@ -83,10 +83,10 @@ $users = User::where('id', '!=', auth()->id())->get();
     {
         try {
             $user->delete();
-            return redirect()->route('users.index')
+            return redirect()->route('admin.users.index')
                 ->with('success', 'User deleted successfully');
         } catch (\Exception $e) {
-            return redirect()->route('users.index')
+            return redirect()->route('admin.users.index')
                 ->with('error', 'Deletion failed: ' . $e->getMessage());
         }
 

@@ -26,7 +26,7 @@
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div class="px-6 py-5 border-b border-gray-200 flex justify-between items-center">
                     <h3 class="text-lg font-medium text-gray-900">Create New User</h3>
-                    <a href="{{ route('users.index') }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-500 flex items-center">
+                    <a href="{{ route('admin.users.index') }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-500 flex items-center">
                         <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                         </svg>
@@ -35,7 +35,7 @@
                 </div>
 
                 <div class="px-6 py-6">
-                    <form method="POST" action="{{ route('users.store') }}" class="space-y-6">
+                    <form method="POST" action="{{ route('admin.users.store') }}" class="space-y-6">
                         @csrf
 
                         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">

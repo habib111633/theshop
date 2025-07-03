@@ -44,7 +44,7 @@ $categories = Category::all();
         $category = new Category();
         $category->name = $request->name;
         $category->save();
-        return redirect()->route('categories.index')->with('success', 'Category created successfully');
+        return redirect()->route('admin.categories.index')->with('success', 'Category created successfully');
 
     }
 
@@ -74,7 +74,7 @@ $categories = Category::all();
     {
         $request->validate(['name' => 'required|string|max:255']);
         $category->update($request->all());
-        return redirect()->route('categories.index')->with('success', 'Category updated successfully!');
+        return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully!');
 
     }
 
@@ -85,7 +85,7 @@ $categories = Category::all();
     {
         try {
             $category->delete();
-            return redirect()->route('categories.index')
+            return redirect()->route('admin.categories.index')
                 ->with('success', 'Category deleted successfully');
         } catch (\Exception $e) {
             return redirect()->route('categories.index')

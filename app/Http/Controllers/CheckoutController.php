@@ -79,7 +79,7 @@ class CheckoutController extends Controller
     public function show(Request $request)
     {
         if (Auth::check() && Auth::user()->is_admin) {
-            return redirect()->route('dashboard');
+            return redirect()->route('admin.dashboard');
         }
         return view('checkout');
     }
