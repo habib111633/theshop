@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Order;
 use App\Observers\OrderObserver;
+use App\Contracts\ProductServiceInterface;
+use App\Services\ProductService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,6 +18,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             \App\Repositories\ProductRepositoryInterface::class,
             \App\Repositories\ProductRepository::class
+        );
+
+        // Bind ProductServiceInterface to ProductService
+        $this->app->bind(
+            ProductServiceInterface::class,
+            ProductService::class
         );
     }
 

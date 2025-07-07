@@ -3,21 +3,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
-use App\Services\ProductService;
+use App\Services\ProductService;  
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use Symfony\Component\HttpFoundation\Request;
-use App\Repositories\ProductRepositoryInterface;
+use App\Contracts\ProductServiceInterface;
 
 
 class ProductController extends Controller
 {
-    protected $ProductService;
-    protected $productRepository;
-    public function __construct(ProductService $ProductService, ProductRepositoryInterface $productRepository)
+    protected $productService;
+    public function __construct(ProductServiceInterface $productService)
     {
-        $this->ProductService = $ProductService;
-        $this->productRepository = $productRepository;
+        $this->productService = $productService;
         $this->middleware('can:view products')->only(['index', 'show']);
         $this->middleware('can:create products')->only(['create', 'store']);
         $this->middleware('can:update products')->only(['edit', 'update']);
@@ -30,8 +28,7 @@ class ProductController extends Controller
 
     public function index()
     {
-        $products = $this->productRepository->all();
-        dd($products);
+        $products = $this->productService->getAllProducts();
         return view('products.index', compact('products'));
     }
     
@@ -52,7 +49,7 @@ return view('products.create', compact('categories'));
      */
     public function store(StoreProductRequest $request)
     {
-$product = $this->ProductService->createProduct(
+$product = $this->productService->createProduct(
     $request->validated() + ['user_id' => auth()->id()],
     $request->file('image')
 );
@@ -90,7 +87,7 @@ return view('products.create', compact('product', 'categories'));
     {
         //
 try {
-    $this->ProductService->updateProduct($product, $request->validated(), $request->file('image'));
+    $this->productService->updateProduct($product, $request->validated(), $request->file('image'));
     return redirect()->route('admin.products.index')
         ->with('success', 'Product updated successfully!');
 } catch (\Exception $e) {
@@ -107,7 +104,7 @@ try {
     {
         //
         try{
-            $this->ProductService->deleteProduct($product);
+            $this->productService->deleteProduct($product);
             return redirect()->route('products.index')
                 ->with('success', 'Product deleted successfully!');
         } catch (\Exception $e) {
@@ -118,7 +115,7 @@ try {
 
     public function shop()
 {
-$products = $this->productRepository->paginateWithRelations(9, ['media', 'category']);
+$products = $this->productService->paginateWithRelations(9, ['media', 'category']);
 $products->withPath(route('shop.ajax'));
 $categories = Category::all();
 return view('shop', compact('products','categories'));
@@ -130,7 +127,7 @@ public function ajaxFilter(Request $request)
         $criteria['categories'] = $request->input('categories', []);
     }
     $sort = $request->input('sort', 'latest');
-    $products = $this->productRepository->filter($criteria, $sort, 9);
+    $products = $this->productService->filter($criteria, $sort, 9);
     $products->appends($request->except('page'));
     return view('partials.products-grid', compact('products'))->render();
 }
@@ -144,7 +141,7 @@ public function updateStock(Request $request, Product $product)
     $request->validate([
         'stock' => 'required|integer|min:0',
     ]);
-    $this->productRepository->updateStock($product, $request->stock);
+    $this->productService->updateStock($product, $request->stock);
     return response()->json([
         'success' => true,
         'stock' => $product->stock,
@@ -154,7 +151,7 @@ public function updateStock(Request $request, Product $product)
 
 public function availableStock($id)
 {
-    $product = $this->productRepository->find($id);
+    $product = $this->productService->find($id);
     $cart = session()->get('cart', []);
     $cartQty = isset($cart[$id]) ? $cart[$id]['quantity'] : 0;
     $available = $product->stock - $cartQty;
