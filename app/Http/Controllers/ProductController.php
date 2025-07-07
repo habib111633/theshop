@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Product;
@@ -8,14 +7,17 @@ use App\Services\ProductService;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use Symfony\Component\HttpFoundation\Request;
+use App\Repositories\ProductRepositoryInterface;
 
 
 class ProductController extends Controller
 {
     protected $ProductService;
-    public function __construct(ProductService $ProductService)
+    protected $productRepository;
+    public function __construct(ProductService $ProductService, ProductRepositoryInterface $productRepository)
     {
         $this->ProductService = $ProductService;
+        $this->productRepository = $productRepository;
         $this->middleware('can:view products')->only(['index', 'show']);
         $this->middleware('can:create products')->only(['create', 'store']);
         $this->middleware('can:update products')->only(['edit', 'update']);
@@ -28,11 +30,11 @@ class ProductController extends Controller
 
     public function index()
     {
-$products = Product::all();
-
-return view('products.index', compact('products'));
-
+        $products = $this->productRepository->all();
+        dd($products);
+        return view('products.index', compact('products'));
     }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -116,38 +118,20 @@ try {
 
     public function shop()
 {
-$products = Product::with('media', 'category')->paginate(9);
-$products->withPath(route('shop.ajax')); // <-- Add this line
-
-    $categories = Category::all(); // Fetch all categories
-    return view('shop', compact('products','categories'));
+$products = $this->productRepository->paginateWithRelations(9, ['media', 'category']);
+$products->withPath(route('shop.ajax'));
+$categories = Category::all();
+return view('shop', compact('products','categories'));
 }
 public function ajaxFilter(Request $request)
 {
-
-    $query = Product::with('media', 'category');
-
+    $criteria = [];
     if ($request->has('categories')) {
-$query->whereIn('category_id', $request->input('categories', []));
-
+        $criteria['categories'] = $request->input('categories', []);
     }
-
-switch ($request->input('sort')) {
-    case 'az':
-        $query->orderBy('name', 'asc');
-        break;
-    case 'latest':
-    default:
-        $query->orderBy('created_at', 'desc');
-        break;
-}
-
-$products = $query->paginate(9);
-
-// Add all current query parameters to pagination links
-$products->appends($request->except('page'));
-
-
+    $sort = $request->input('sort', 'latest');
+    $products = $this->productRepository->filter($criteria, $sort, 9);
+    $products->appends($request->except('page'));
     return view('partials.products-grid', compact('products'))->render();
 }
 public function publicDetail(Product $product)
@@ -160,10 +144,7 @@ public function updateStock(Request $request, Product $product)
     $request->validate([
         'stock' => 'required|integer|min:0',
     ]);
-
-    $product->stock = $request->stock;
-    $product->save();
-
+    $this->productRepository->updateStock($product, $request->stock);
     return response()->json([
         'success' => true,
         'stock' => $product->stock,
@@ -173,7 +154,7 @@ public function updateStock(Request $request, Product $product)
 
 public function availableStock($id)
 {
-    $product = Product::findOrFail($id);
+    $product = $this->productRepository->find($id);
     $cart = session()->get('cart', []);
     $cartQty = isset($cart[$id]) ? $cart[$id]['quantity'] : 0;
     $available = $product->stock - $cartQty;
