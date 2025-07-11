@@ -8,7 +8,7 @@ class ProductRepository implements ProductRepositoryInterface
 {
     public function all()
     {
-        return Product::all();
+         return Product::all();
     }
 
     public function find($id)
@@ -69,4 +69,4 @@ class ProductRepository implements ProductRepositoryInterface
         $product->save();
         return $product;
     }
-} 
+}

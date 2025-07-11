@@ -21,10 +21,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
-// User::where('id', '!=', Auth::id())->get();
-$users = User::where('id', '!=', auth()->id())->get();
-
+        $users = User::where('id', '!=', auth()->id())->get();
         return view('users.index', compact('users'));
     }
 

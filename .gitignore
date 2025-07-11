@@ -17,3 +17,6 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+start_dev_env.sh
+xampp_sudo.exp
+/public/images

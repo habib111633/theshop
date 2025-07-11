@@ -3,11 +3,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
-use App\Services\ProductService;  
+use App\Services\ProductService;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use Symfony\Component\HttpFoundation\Request;
 use App\Contracts\ProductServiceInterface;
+
 
 
 class ProductController extends Controller
@@ -29,9 +30,10 @@ class ProductController extends Controller
     public function index()
     {
         $products = $this->productService->getAllProducts();
+
         return view('products.index', compact('products'));
     }
-    
+
 
     /**
      * Show the form for creating a new resource.

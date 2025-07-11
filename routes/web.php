@@ -16,6 +16,7 @@ use App\Http\Controllers\UserOrderController;
 use App\Http\Controllers\DashboardController;
 use App\Models\Category;
 use App\Http\Controllers\StripeWebhookController;
+use App\Http\Controllers\StudentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,12 +26,13 @@ use App\Http\Controllers\StripeWebhookController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/shop', [ProductController::class, 'shop'])->name('shop');
 Route::match(['GET', 'POST'], '/shop/filter', [ProductController::class, 'ajaxFilter'])->name('shop.ajax');
-Route::get('/product-detail', fn() => view('single-product-page'))->name('product-detail');
 Route::get('/product/{product}', [ProductController::class, 'publicDetail'])->name('product.detail');
 Route::view('/contact', 'contact')->name('contact');
 Route::view('/faq', 'faq')->name('faq');
 Route::view('/support', 'support')->name('support');
 Route::view('/returns', 'returns')->name('returns');
+
+
 
 /*
 |--------------------------------------------------------------------------

@@ -1,0 +1,2576 @@
+name: Endpoints
+description: ''
+endpoints:
+  -
+    httpMethods:
+      - POST
+    uri: api/register
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Handle an incoming registration request.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        name: name
+        description: "The user's name."
+        required: true
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      email:
+        name: email
+        description: "The user's email."
+        required: true
+        example: qkunze@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      password:
+        name: password
+        description: "The user's password."
+        required: true
+        example: 'O[2UZ5ij-e/dl4m{o,'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      password_confirmation:
+        name: password_confirmation
+        description: 'The password confirmation.'
+        required: true
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      name: consequatur
+      email: qkunze@example.com
+      password: 'O[2UZ5ij-e/dl4m{o,'
+      password_confirmation: consequatur
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/login
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Handle an incoming authentication request.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      email:
+        name: email
+        description: 'Must be a valid email address.'
+        required: true
+        example: qkunze@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      password:
+        name: password
+        description: ''
+        required: true
+        example: 'O[2UZ5ij-e/dl4m{o,'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      email: qkunze@example.com
+      password: 'O[2UZ5ij-e/dl4m{o,'
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/logout
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Destroy an authenticated session.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/user
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/users
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display a listing of the resource.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/users/{id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display the specified resource.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the user.'
+        required: true
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: consequatur
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/users
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Store a newly created resource in storage.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        name: name
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: vmqeopfuudtdsufvyvddq
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      email:
+        name: email
+        description: 'Must be a valid email address.'
+        required: true
+        example: kunde.eloisa@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      password:
+        name: password
+        description: 'Must be at least 8 characters.'
+        required: false
+        example: '4[*UyPJ"}6'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      roles:
+        name: roles
+        description: ''
+        required: false
+        example: null
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      name: vmqeopfuudtdsufvyvddq
+      email: kunde.eloisa@example.com
+      password: '4[*UyPJ"}6'
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/users/{id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Remove the specified resource from storage.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the user.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/products
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display a listing of the resource.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 403
+        content: |-
+          {
+              "message": "This action is unauthorized."
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-ratelimit-limit: '60'
+          x-ratelimit-remaining: '59'
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/products/{product_id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display the specified resource.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      product_id:
+        name: product_id
+        description: 'The ID of the product.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      product_id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 403
+        content: |-
+          {
+              "message": "This action is unauthorized."
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-ratelimit-limit: '60'
+          x-ratelimit-remaining: '58'
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/products/shop
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 404
+        content: |-
+          {
+              "message": "No query results for model [App\\Models\\Product] shop"
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-ratelimit-limit: '60'
+          x-ratelimit-remaining: '57'
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/products/filter
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 404
+        content: |-
+          {
+              "message": "No query results for model [App\\Models\\Product] filter"
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-ratelimit-limit: '60'
+          x-ratelimit-remaining: '56'
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/products/{product_id}/public-detail'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      product_id:
+        name: product_id
+        description: 'The ID of the product.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      product_id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |
+          <!doctype html>
+          <html lang="en">
+
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <meta name="csrf-token" content="">
+
+              <!-- Favicon -->
+              <link rel="icon" type="icon" href="http://127.0.0.1:8000/images/favicon.png" />
+              <title>Poduct detail</title>
+
+              <!-- Google Fonts -->
+              <link rel="preconnect" href="https://fonts.googleapis.com">
+              <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+              <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+
+              <!-- Font Awesome -->
+              <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+              <!-- CSS Assets -->
+              <!-- Swiper CSS CDN -->
+              <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+
+              <!-- ...your other CSS files... -->
+
+              <!-- Swiper JS CDN (place before your custom JS that initializes Swiper) -->
+              <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+              <link rel="stylesheet" href="http://127.0.0.1:8000/css/styles.css">
+              <link rel="stylesheet" href="http://127.0.0.1:8000/css/custom.css">
+              <link rel="stylesheet" href="http://127.0.0.1:8000/css/tailwind.css">
+
+              <!-- Vite for JS/CSS compilation (if using) -->
+              <script type="module" src="http://[::1]:5173/@vite/client"></script><link rel="stylesheet" href="http://[::1]:5173/resources/css/app.css" /><script type="module" src="http://[::1]:5173/resources/js/app.js"></script>    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+              <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+              <script src="http://127.0.0.1:8000/js/script.js"></script>
+          </head>
+
+          <body>
+              <!-- Header -->
+              <header class="bg-gray-dark sticky top-0 z-50">
+                  <div class="container mx-auto flex justify-between items-center py-4">
+                      <!-- Left section: Logo -->
+                      <a href="index.html" class="flex items-center">
+                          <div>
+                              <img src="http://127.0.0.1:8000/images/template-white-logo.png" alt="Logo" class="h-14 w-auto mr-4">
+                          </div>
+                      </a>
+
+                      <!-- Hamburger menu (for mobile) -->
+                      <div class="flex lg:hidden">
+                          <button id="hamburger" class="text-white focus:outline-none">
+                              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M4 6h16M4 12h16m-7 6h7"></path>
+                              </svg>
+                          </button>
+                      </div>
+
+                      <!-- Center section: Menu -->
+                      <nav class="hidden lg:flex md:flex-grow justify-center">
+                          <ul class="flex justify-center space-x-4 text-white">
+                              <li><a href="http://127.0.0.1:8000" class="hover:text-[#ff0042] font-semibold">Home</a></li>
+                              <li><a href="http://127.0.0.1:8000/shop" class="hover:text-[#ff0042] font-semibold">Shop</a></li>
+
+                              <li class="relative group">
+                                  <button class="hover:text-[#ff0042] font-semibold focus:outline-none">Help
+                                      <svg class="w-3 h-3 ml-1 transition-transform group-hover:rotate-180 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                      </svg>
+                                  </button>
+                                  <!-- Dropdown -->
+                                  <ul class="absolute left-0 mt-0 w-40 bg-white text-gray-800 rounded shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition z-50">
+                                      <li><a href="http://127.0.0.1:8000/faq" class="block px-4 py-2 hover:bg-gray-100 transition">FAQ</a></li>
+                                      <li><a href="http://127.0.0.1:8000/support" class="block px-4 py-2 hover:bg-gray-100 transition">Support</a></li>
+                                      <li><a href="http://127.0.0.1:8000/returns" class="block px-4 py-2 hover:bg-gray-100 transition">Returns</a></li>
+                                  </ul>
+                              </li>
+                              <li><a href="http://127.0.0.1:8000/contact" class="hover:text-[#ff0042] font-semibold">Contact</a></li>
+                              <li><a href="http://127.0.0.1:8000/checkout" class="hover:text-[#ff0042] font-semibold">Checkout</a></li>
+                          </ul>
+                      </nav>
+
+                      <!-- Right section: Buttons (for desktop) -->
+                      <div class="hidden lg:flex items-center space-x-4 relative">
+                            <!-- Register/Login Buttons for guests -->
+                          <a href="http://127.0.0.1:8000/register"
+                              class="bg-[#ff0042] border border-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] font-semibold px-4 py-2 rounded-full">Register</a>
+                          <a href="http://127.0.0.1:8000/login"
+                              class="bg-[#ff0042] border border-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] font-semibold px-4 py-2 rounded-full">Login</a>
+                      
+                          <div class="relative group cart-wrapper">
+                              <a href="http://127.0.0.1:8000/cart">
+                                  <img src="http://127.0.0.1:8000/images/cart-shopping.svg" alt="Cart"
+                                      class="h-6 w-6 group-hover:scale-120">
+                                  <span class="cart-count absolute -top-2 -right-2 bg-[#ff0042] text-white text-xs font-bold rounded-full px-2 py-0.5">0</span>
+                              </a>
+                              <!-- Cart dropdown -->
+                              <div
+                                  class="absolute right-0 mt-1 w-80 bg-white shadow-lg p-4 rounded cart-dropdown hidden group-hover:block">
+                                  <div class="space-y-4">
+                  <p class="text-center text-gray-500">Your cart is empty.</p>
+              
+              </div>
+                              </div>
+                          </div>
+                          <!-- <a id="search-icon" href="javascript:void(0);" class="text-white hover:text-[#ff0042] group">
+                              <img src="http://127.0.0.1:8000/images/search-icon.svg" alt="Search"
+                                  class="h-6 w-6 transition-transform transform group-hover:scale-120">
+                          </a> -->
+                          <!-- Search field -->
+                          <div id="search-field"
+                              class="hidden absolute top-full right-0 mt-2 w-full bg-white shadow-lg p-2 rounded">
+                              <input type="text" class="w-full p-2 border border-gray-300 rounded"
+                                  placeholder="Search for products...">
+                          </div>
+                      </div>
+                  </div>
+              </header>
+
+              <!-- Mobile menu -->
+              <nav id="mobile-menu-placeholder" class="mobile-menu hidden flex-col items-center space-y-8 lg:hidden">
+                  <ul class="w-full">
+                      <li><a href="http://127.0.0.1:8000" class="hover:text-[#ff0042] font-bold block py-2">Home</a></li>
+                      <li><a href="http://127.0.0.1:8000/shop" class="hover:text-[#ff0042] font-bold block py-2">Shop</a></li>
+                                  <li><a href="http://127.0.0.1:8000/checkout" class="hover:text-[#ff0042] font-bold block py-2">Checkout</a></li>
+                      <li><a href="http://127.0.0.1:8000/contact" class="hover:text-[#ff0042] font-bold block py-2">Contact</a></li>
+                      <li><a href="http://127.0.0.1:8000/faq" class="hover:text-[#ff0042] font-bold block py-2">FAQ</a></li>
+                      <li><a href="http://127.0.0.1:8000/support" class="hover:text-[#ff0042] font-bold block py-2">Support</a></li>
+                      <li><a href="http://127.0.0.1:8000/returns" class="hover:text-[#ff0042] font-bold block py-2">Returns</a></li>
+                  </ul>
+                  <div class="flex flex-col mt-6 space-y-2 items-center">
+                      <a href="http://127.0.0.1:8000/register"
+                          class="bg-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] border border-[#ff0042] font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px]">Register</a>
+                      <a href="http://127.0.0.1:8000/login"
+                          class="bg-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] border border-[#ff0042] font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px]">Login</a>
+                      <a href="register.html"
+                          class="bg-[#ff0042] hover:bg-transparent text-white hover:text-[#ff0042] border border-[#ff0042] font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px]">Cart
+                          -&nbsp;<span>5</span>&nbsp;items</a>
+                  </div>
+                  <!-- Search field -->
+                  <div class="  top-full right-0 mt-2 w-full bg-white shadow-lg p-2 rounded">
+                      <input type="text" class="w-full p-2 border border-gray-300 rounded" placeholder="Search for products...">
+                  </div>
+              </nav>
+
+              <!-- Main Content -->
+              
+          <!-- Breadcrumbs -->
+          <section id="breadcrumbs" class="pt-6 bg-gray-50">
+              <div class="container mx-auto px-4">
+                  <ol class="list-reset flex">
+                      <li><a href="http://127.0.0.1:8000" class="font-semibold hover:text-[#ff0042]">Home</a></li>
+                      <li><span class="mx-2">&gt;</span></li>
+                      <li><a href="http://127.0.0.1:8000/shop" class="font-semibold hover:text-[#ff0042]">Shop</a></li>
+                      <li><span class="mx-2">&gt;</span></li>
+                      <li><a href="#" class="font-semibold hover:text-[#ff0042]">T-shirts</a></li>
+                      <li><span class="mx-2">&gt;</span></li>
+                      <li>Preppy T-shirt</li>
+                  </ol>
+              </div>
+          </section>
+
+          <!-- Product info -->
+          <section id="product-info">
+              <div class="container mx-auto px-4">
+                  <div class="py-6">
+                      <div class="flex flex-col lg:flex-row gap-6">
+                          <!-- Image Section -->
+                          <div class="w-full lg:w-1/2">
+                              <div class="grid gap-4">
+                                  <!-- Big Image -->
+
+
+
+                                  <div id="main-image-container">
+                                      <img id="main-image"
+                                          class="h-auto w-full max-w-full rounded-lg object-cover object-center md:h-[480px]"
+                                          src="http://127.0.0.1:8000/storage/products/BCmB0vL6x1aoXTZnbTqinpkdOQndhcaPVLfZssFo.jpg" alt="Main Product Image" />
+
+
+                                  </div>
+                                  <!-- Small Images -->
+                                  <div class="grid grid-cols-5 gap-4">
+                                      <div>
+                                          <img onclick="changeImage(this)" data-full="http://127.0.0.1:8000/images/single-product/1.jpg"
+                                              src="http://127.0.0.1:8000/images/single-product/1.jpg"
+                                              class="object-cover object-center max-h-30 max-w-full rounded-lg cursor-pointer"
+                                              alt="Gallery Image 1" />
+                                      </div>
+                                      <div>
+                                          <img onclick="changeImage(this)" data-full="http://127.0.0.1:8000/images/single-product/2.jpg"
+                                              src="http://127.0.0.1:8000/images/single-product/2.jpg"
+                                              class="object-cover object-center max-h-30 max-w-full rounded-lg cursor-pointer"
+                                              alt="Gallery Image 2" />
+                                      </div>
+                                      <div>
+                                          <img onclick="changeImage(this)" data-full="http://127.0.0.1:8000/images/single-product/3.jpg"
+                                              src="http://127.0.0.1:8000/images/single-product/3.jpg"
+                                              class="object-cover object-center max-h-30 max-w-full rounded-lg cursor-pointer"
+                                              alt="Gallery Image 3" />
+                                      </div>
+                                      <div>
+                                          <img onclick="changeImage(this)" data-full="http://127.0.0.1:8000/images/single-product/4.jpg"
+                                              src="http://127.0.0.1:8000/images/single-product/4.jpg"
+                                              class="object-cover object-center max-h-30 max-w-full rounded-lg cursor-pointer"
+                                              alt="Gallery Image 4" />
+                                      </div>
+                                      <div>
+                                          <img onclick="changeImage(this)" data-full="http://127.0.0.1:8000/images/single-product/5.jpg"
+                                              src="http://127.0.0.1:8000/images/single-product/5.jpg"
+                                              class="object-cover object-center max-h-30 max-w-full rounded-lg cursor-pointer"
+                                              alt="Gallery Image 5" />
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                          <!-- Product Details Section -->
+                          <div class="w-full lg:w-1/2 flex flex-col justify-between">
+                              <div class="pb-8 border-b border-gray-line">
+                                  <h1 class="text-3xl font-bold mb-4">Melinda Nunez</h1>
+
+                                  <div class="flex items-center mb-8">
+                                      <span>★★★★★</span>
+                                      <span class="ml-2">(0 Reviews)</span>
+                                      <a href="#" class="ml-4 text-primary font-semibold">Write a review</a>
+                                  </div>
+                                  <div class="mb-4 pb-4 border-b border-gray-line">
+                                      <p class="mb-2">Brand:<strong><a href="#" class="hover:text-primary"> Nike</a></strong>
+                                      </p>
+                                      <p class="mb-2">Product code:<strong> 00123</strong></p>
+                                      <p class="mb-2">Availability:<strong>
+                                          <span id="available-stock-1">Loading...</span>
+                                      </strong></p>
+                                  </div>
+                                  <div class="text-2xl font-semibold mb-8" data-unit-price="511.00">$511.00</div>
+                                  <div class="flex items-center mb-8">
+                                      <button id="decrease"
+                                          class="bg-[#ff0042] hover:bg-transparent border border-transparent hover:border-[#ff0042] text-white hover:text-[#ff0042] font-semibold w-10 h-10 rounded-full flex items-center justify-center focus:outline-none">-</button>
+                                      <input id="quantity" type="number" value="1" min="1" max="26" class="w-16 py-2 text-center focus:outline-none">
+                                      <button id="increase"
+                                          class="bg-[#ff0042] hover:bg-transparent border border-transparent hover:border-[#ff0042] text-white hover:text-[#ff0042] font-semibold  w-10 h-10 rounded-full focus:outline-none">+</button>
+                                  </div>
+                                  <button
+                                      class="bg-[#ff0042] border border-transparent hover:bg-transparent hover:border-[#ff0042] text-white hover:text-[#ff0042] font-semibold py-2 px-4 rounded-full add-to-cart-btn"
+                                      data-product-id="1">Add to Cart</button>
+                              </div>
+                              <!-- Social sharing -->
+                              <div class="flex space-x-4 my-6">
+                                  <a href="#" class="w-4 h-4 flex items-center justify-center">
+                                      <img src="http://127.0.0.1:8000/images/social_icons/facebook.svg" alt="Facebook"
+                                          class="w-4 h-4 transition-transform transform hover:scale-110">
+                                  </a>
+                                  <a href="#" class="w-4 h-4 flex items-center justify-center">
+                                      <img src="http://127.0.0.1:8000/images/social_icons/instagram.svg" alt="Instagram"
+                                          class="w-4 h-4 transition-transform transform hover:scale-110">
+                                  </a>
+                                  <a href="#" class="w-4 h-4 flex items-center justify-center">
+                                      <img src="http://127.0.0.1:8000/images/social_icons/pinterest.svg" alt="Pinterest"
+                                          class="w-4 h-4 transition-transform transform hover:scale-110">
+                                  </a>
+                                  <a href="#" class="w-4 h-4 flex items-center justify-center">
+                                      <img src="http://127.0.0.1:8000/images/social_icons/twitter.svg" alt="Twitter"
+                                          class="w-4 h-4 transition-transform transform hover:scale-110">
+                                  </a>
+                                  <a href="#" class="w-4 h-4 flex items-center justify-center">
+                                      <img src="http://127.0.0.1:8000/images/social_icons/viber.svg" alt="Viber"
+                                          class="w-4 h-4 transition-transform transform hover:scale-110">
+                                  </a>
+                              </div>
+                              <!-- Additional Information -->
+                              <div>
+                                  <h3 class="text-lg font-semibold mb-2">Product Description</h3>
+                                  <p>Ipsum in dolore est</p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </section>
+
+          <script src="/js/cart-manager.js"></script>
+
+          <style>
+              input[type=number]::-webkit-inner-spin-button,
+          input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+          }
+          input[type=number] {
+            -moz-appearance: textfield;
+          }
+          </style>
+
+              <!-- Footer -->
+              <footer class="border-t border-gray-line">
+                  <!-- Top part -->
+                  <div class="container mx-auto px-4 py-10">
+                      <div class="flex flex-wrap -mx-4">
+                          <!-- Menu 1 -->
+                          <div class="w-full sm:w-1/6 px-4 mb-8">
+                              <h3 class="text-lg font-semibold mb-4">Shop</h3>
+                              <ul>
+                                  <li><a href="/shop.html" class="hover:text-[#ff0042]">Shop</a></li>
+                                  <li><a href="/single-product-page.html" class="hover:text-[#ff0042]">Women</a></li>
+                                  <li><a href="/shop.html" class="hover:text-[#ff0042]">Men</a></li>
+                                  <li><a href="/single-product-page.html" class="hover:text-[#ff0042]">Shoes</a></li>
+                                  <li><a href="/single-product-page.html" class="hover:text-[#ff0042]">Accessories</a></li>
+                              </ul>
+                          </div>
+                          <!-- Menu 2 -->
+                          <div class="w-full sm:w-1/6 px-4 mb-8">
+                              <h3 class="text-lg font-semibold mb-4">Pages</h3>
+                              <ul>
+                                  <li><a href="http://127.0.0.1:8000/shop" class="hover:text-[#ff0042]">Shop</a></li>
+                                  <li><a href="http://127.0.0.1:8000/faq" class="hover:text-[#ff0042]">FAQ</a></li>
+                                  <li><a href="http://127.0.0.1:8000/contact" class="hover:text-[#ff0042]">Contact</a></li>
+                                  <li><a href="/checkout.html" class="hover:text-[#ff0042]">Checkout</a></li>
+                                  <li><a href="/404.html" class="hover:text-[#ff0042]">404</a></li>
+                              </ul>
+                          </div>
+                          <!-- Menu 3 -->
+                          <div class="w-full sm:w-1/6 px-4 mb-8">
+                              <h3 class="text-lg font-semibold mb-4">Account</h3>
+                              <ul>
+                                  <li><a href="/cart.html" class="hover:text-[#ff0042]">Cart</a></li>
+                                  <li><a href="http://127.0.0.1:8000/register" class="hover:text-[#ff0042]">Registration</a></li>
+                                  <li><a href="http://127.0.0.1:8000/login" class="hover:text-[#ff0042]">Login</a></li>
+                              </ul>
+                          </div>
+                          <!-- Social Media -->
+                          <div class="w-full sm:w-1/6 px-4 mb-8">
+                              <h3 class="text-lg font-semibold mb-4">Follow Us</h3>
+                              <ul>
+                                  <li class="flex items-center mb-2">
+                                      <img src="http://127.0.0.1:8000/images/social_icons/facebook.svg" alt="Facebook"
+                                          class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                                      <a href="#" class="hover:text-[#ff0042]">Facebook</a>
+                                  </li>
+                                  <li class="flex items-center mb-2">
+                                      <img src="http://127.0.0.1:8000/images/social_icons/twitter.svg" alt="Twitter"
+                                          class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                                      <a href="#" class="hover:text-[#ff0042]">Twitter</a>
+                                  </li>
+                                  <li class="flex items-center mb-2">
+                                      <img src="http://127.0.0.1:8000/images/social_icons/instagram.svg" alt="Instagram"
+                                          class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                                      <a href="#" class="hover:text-[#ff0042]">Instagram</a>
+                                  </li>
+                                  <li class="flex items-center mb-2">
+                                      <img src="http://127.0.0.1:8000/images/social_icons/pinterest.svg" alt="Pinterest"
+                                          class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                                      <a href="#" class="hover:text-[#ff0042]">Pinterest</a>
+                                  </li>
+                                  <li class="flex items-center mb-2">
+                                      <img src="http://127.0.0.1:8000/images/social_icons/youtube.svg" alt="YouTube"
+                                          class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                                      <a href="#" class="hover:text-[#ff0042]">YouTube</a>
+                                  </li>
+                              </ul>
+                          </div>
+                          <!-- Contact Information -->
+                          <div class="w-full sm:w-2/6 px-4 mb-8">
+                              <h3 class="text-lg font-semibold mb-4">Contact Us</h3>
+                              <p><img src="http://127.0.0.1:8000/images/template-logo.png" alt="Logo" class="h-[60px] mb-4"></p>
+                              <p>123 Street Name, Paris, France</p>
+                              <p class="text-xl font-bold my-4">Phone: (123) 456-7890</p>
+                              <a href="mailto:info@company.com" class="underline">Email: info@company.com</a>
+                          </div>
+                      </div>
+                  </div>
+
+                  <!-- Bottom part -->
+                  <div class="py-6 border-t border-gray-line">
+                      <div class="container mx-auto px-4 flex flex-wrap justify-between items-center">
+                          <!-- Copyright and Links -->
+                          <div class="w-full lg:w-3/4 text-center lg:text-left mb-4 lg:mb-0">
+                              <p class="mb-2 font-bold">&copy; 2024 Your Company. All rights reserved.</p>
+                              <ul class="flex justify-center lg:justify-start space-x-4 mb-4 lg:mb-0">
+                                  <li><a href="#" class="hover:text-[#ff0042]">Privacy Policy</a></li>
+                                  <li><a href="#" class="hover:text-[#ff0042]">Terms of Service</a></li>
+                                  <li><a href="#" class="hover:text-[#ff0042]">FAQ</a></li>
+                              </ul>
+                              <p class="text-sm mt-4">Your shop's description goes here. This is a brief introduction to
+                                  your shop
+                                  and what you offer.</p>
+                          </div>
+                          <!-- Payment Icons -->
+                          <div class="w-full lg:w-1/4 text-center lg:text-right">
+                              <img src="http://127.0.0.1:8000/images/social_icons/paypal.svg" alt="PayPal" class="inline-block h-8 mr-2">
+                              <img src="http://127.0.0.1:8000/images/social_icons/stripe.svg" alt="Stripe" class="inline-block h-8 mr-2">
+                              <img src="http://127.0.0.1:8000/images/social_icons/visa.svg" alt="Visa" class="inline-block h-8">
+                          </div>
+                      </div>
+                  </div>
+              </footer>
+
+              <script>
+             document.querySelectorAll(".add-to-cart-btn").forEach((btn) => {
+              btn.addEventListener("click", function(e) {
+                  e.preventDefault();
+                  let productId = this.getAttribute("data-product-id");
+                  let quantity = this.getAttribute("data-quantity") || 1;
+
+                  // Show loading state
+                  this.disabled = true;
+                  this.innerHTML = '<span class="animate-spin">↻</span> Adding...';
+
+                  fetch("http://127.0.0.1:8000/cart/add", {
+                      method: "POST",
+                      headers: {
+                          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                          "Accept": "application/json",
+                          "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                          product_id: productId,
+                          quantity: quantity
+                      }),
+                  })
+                  .then(response => response.json())
+                  .then(data => {
+                      if (data.error) {
+                          alert(data.error);
+                          return;
+                      }
+                      // Update cart preview HTML
+                      if (data.preview) {
+                          document.querySelector(".cart-dropdown").innerHTML = data.preview;
+                          document.querySelector(".cart-wrapper").classList.add("open");
+                          setTimeout(() => {
+                              document.querySelector(".cart-wrapper").classList.remove("open");
+                          }, 3000);
+                      }
+                      // Update cart count badge
+                      if (data.count) {
+                          document.querySelector(".cart-count").textContent = data.count;
+                      }
+                   })
+                  .catch(error => {
+                      alert('A network or server error occurred. See console for details.');
+                      console.error("Error:", error);
+                  })
+                  .finally(() => {
+                      this.disabled = false;
+                      this.textContent = "Add to Cart";
+                  });
+              });
+          });
+              </script>
+              </script>
+              <script src="node_modules/swiper/swiper-bundle.js">
+                  </script>
+                  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+                  <script src="http://127.0.0.1:8000/js/script.js"></script>
+
+          </body>
+
+          </html>
+        headers:
+          content-type: 'text/html; charset=UTF-8'
+          cache-control: 'no-cache, private'
+          x-ratelimit-limit: '60'
+          x-ratelimit-remaining: '55'
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/products
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Store a newly created resource in storage.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: multipart/form-data
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        name: name
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: vmqeopfuudtdsufvyvddq
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      description:
+        name: description
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      price:
+        name: price
+        description: 'Must be at least 0.'
+        required: true
+        example: 1
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      stock:
+        name: stock
+        description: 'Must be at least 0.'
+        required: true
+        example: 45
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      category_id:
+        name: category_id
+        description: 'The <code>id</code> of an existing record in the categories table.'
+        required: true
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      image:
+        name: image
+        description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+        required: false
+        example: null
+        type: file
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+    cleanBodyParameters:
+      name: vmqeopfuudtdsufvyvddq
+      price: 1
+      stock: 45
+      category_id: consequatur
+    fileParameters:
+      image: null
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PUT
+    uri: 'api/products/{product_id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update the specified resource in storage.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: multipart/form-data
+      Accept: application/json
+    urlParameters:
+      product_id:
+        name: product_id
+        description: 'The ID of the product.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      product_id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        name: name
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: vmqeopfuudtdsufvyvddq
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      description:
+        name: description
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      price:
+        name: price
+        description: 'Must be at least 0.'
+        required: true
+        example: 1
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      stock:
+        name: stock
+        description: 'Must be at least 0.'
+        required: true
+        example: 45
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      category_id:
+        name: category_id
+        description: 'The <code>id</code> of an existing record in the categories table.'
+        required: true
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      image:
+        name: image
+        description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+        required: false
+        example: null
+        type: file
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+    cleanBodyParameters:
+      name: vmqeopfuudtdsufvyvddq
+      price: 1
+      stock: 45
+      category_id: consequatur
+    fileParameters:
+      image: null
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/products/{product_id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Remove the specified resource from storage.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      product_id:
+        name: product_id
+        description: 'The ID of the product.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      product_id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/categories
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display a listing of the resource.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 403
+        content: |-
+          {
+              "message": "This action is unauthorized."
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-ratelimit-limit: '60'
+          x-ratelimit-remaining: '54'
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/categories/{category_id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display the specified resource.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      category_id:
+        name: category_id
+        description: 'The ID of the category.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      category_id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 403
+        content: |-
+          {
+              "message": "This action is unauthorized."
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-ratelimit-limit: '60'
+          x-ratelimit-remaining: '53'
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/categories
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Store a newly created resource in storage.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        name: name
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: vmqeopfuudtdsufvyvddq
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      name: vmqeopfuudtdsufvyvddq
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PUT
+    uri: 'api/categories/{category_id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update the specified resource in storage.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      category_id:
+        name: category_id
+        description: 'The ID of the category.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      category_id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        name: name
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: vmqeopfuudtdsufvyvddq
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      name: vmqeopfuudtdsufvyvddq
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/categories/{category_id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Remove the specified resource from storage.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      category_id:
+        name: category_id
+        description: 'The ID of the category.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      category_id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/cart/add
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/cart/remove
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/checkout
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      billing_zip:
+        name: billing_zip
+        description: 'Must not be greater than 20 characters.'
+        required: true
+        example: vmqeopfuudtdsufvy
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      billing_phone:
+        name: billing_phone
+        description: 'Must not be greater than 20 characters.'
+        required: true
+        example: vddqamniihfqcoynl
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      payment_method:
+        name: payment_method
+        description: ''
+        required: true
+        example: cod
+        type: string
+        enumValues:
+          - cod
+          - bank
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      billing_zip: vmqeopfuudtdsufvy
+      billing_phone: vddqamniihfqcoynl
+      payment_method: cod
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/orders
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/orders/{order_id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      order_id:
+        name: order_id
+        description: 'The ID of the order.'
+        required: true
+        example: 45
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      order_id: 45
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: 'api/orders/{order_id}/cancel'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      order_id:
+        name: order_id
+        description: 'The ID of the order.'
+        required: true
+        example: 45
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      order_id: 45
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/orders/{order_id}/invoice'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      order_id:
+        name: order_id
+        description: 'The ID of the order.'
+        required: true
+        example: 45
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      order_id: 45
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/admin/orders
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/admin/orders/{order_id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      order_id:
+        name: order_id
+        description: 'The ID of the order.'
+        required: true
+        example: 45
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      order_id: 45
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PUT
+    uri: 'api/admin/orders/{order_id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      order_id:
+        name: order_id
+        description: 'The ID of the order.'
+        required: true
+        example: 45
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      order_id: 45
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      status:
+        name: status
+        description: 'Must not be greater than 50 characters.'
+        required: true
+        example: vmqeopfuudtdsufvyvddq
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      status: vmqeopfuudtdsufvyvddq
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/admin/orders/{order_id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      order_id:
+        name: order_id
+        description: 'The ID of the order.'
+        required: true
+        example: 45
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      order_id: 45
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/conversations
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/conversations
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      user_id:
+        name: user_id
+        description: 'The <code>id</code> of an existing record in the users table.'
+        required: true
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      user_id: consequatur
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/conversations/{conversation_id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      conversation_id:
+        name: conversation_id
+        description: 'The ID of the conversation.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      conversation_id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/roles
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display a listing of the resource.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/roles
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Store a newly created resource in storage.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        name: name
+        description: ''
+        required: true
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      permissions:
+        name: permissions
+        description: ''
+        required: false
+        example: null
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      name: consequatur
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PUT
+    uri: 'api/roles/{role}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update the specified resource in storage.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      role:
+        name: role
+        description: 'The role.'
+        required: true
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      role: consequatur
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        name: name
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      permissions:
+        name: permissions
+        description: ''
+        required: false
+        example: null
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/roles/{role}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Remove the specified resource from storage.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      role:
+        name: role
+        description: 'The role.'
+        required: true
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      role: consequatur
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/profile
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: "Display the user's profile form."
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: api/profile
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: "Delete the user's account."
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      password:
+        name: password
+        description: ''
+        required: true
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      password: consequatur
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/products/export
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 404
+        content: |-
+          {
+              "message": "No query results for model [App\\Models\\Product] export"
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-ratelimit-limit: '60'
+          x-ratelimit-remaining: '52'
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/stripe/webhook
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/admin/dashboard
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []

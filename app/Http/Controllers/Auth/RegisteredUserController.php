@@ -26,6 +26,11 @@ class RegisteredUserController extends Controller
     /**
      * Handle an incoming registration request.
      *
+     * @bodyParam name string required The user's name.
+     * @bodyParam email string required The user's email.
+     * @bodyParam password string required The user's password.
+     * @bodyParam password_confirmation string required The password confirmation.
+     *
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request): RedirectResponse
