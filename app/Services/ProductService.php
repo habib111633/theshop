@@ -36,19 +36,35 @@ class ProductService implements \App\Contracts\ProductServiceInterface
         return $this->productRepository->find($id);
     }
 
-    public function create(array $data, ?\Illuminate\Http\UploadedFile $image): Product
+    public function create(array $data, ?UploadedFile $image): Product
     {
-        if ($image) {
-            $data['image_path'] = $image->store('products', 'public');
-        }
-        return $this->productRepository->create($data);
-    }
+        $product = $this->productRepository->create($data);
 
+        if ($image) {
+            $path = $image->store('products', 'public');
+            $product->media()->create(['path' => $path]);
+        }
+
+        return $product;
+    }
     public function updateStock(Product $product, int $stock): Product
     {
         if ($stock < 0) {
             throw new \InvalidArgumentException('Stock cannot be negative');
         }
         return $this->productRepository->updateStock($product, $stock);
+    }
+
+    public function deleteProduct(Product $product)
+    {
+        // Delete associated image if exists
+        if ($product->media->isNotEmpty()) {
+            foreach ($product->media as $media) {
+                Storage::disk('public')->delete($media->path);
+                $media->delete();
+            }
+        }
+        // Delete the product itself
+        $this->productRepository->delete($product);
     }
 }

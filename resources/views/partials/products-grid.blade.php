@@ -11,14 +11,14 @@
         <p class=" my-2">{{ $product->category->name }}</p>
         <div class="flex items-center mb-4">
             <span class="text-lg font-bold text-[#ff0042]">${{ number_format($product->price, 2) }}</span>
-            <span class="text-sm ml-2" id="available-stock-{{ $product->id }}">Loading...</span>
+            <span class="text-sm ml-2" id="available-stock-{{ $product->id }}">{{ $product->stock }}</span>
         </div>
         <button
-    class="add-to-cart-btn bg-[#ff0042] text-white px-4 py-2 rounded"
-    data-product-id="{{ $product->id }}"
-    id="add-to-cart-btn-{{ $product->id }}">
-    Add to Cart
-</button>
+            class="add-to-cart-btn bg-[#ff0042] text-white px-4 py-2 rounded"
+            data-product-id="{{ $product->id }}"
+            id="add-to-cart-btn-{{ $product->id }}">
+            Add to Cart
+        </button>
     </div>
     @endforeach
 </div>

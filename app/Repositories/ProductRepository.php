@@ -49,6 +49,7 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function create(array $data)
     {
+
         return Product::create($data);
     }
 
@@ -58,10 +59,12 @@ class ProductRepository implements ProductRepositoryInterface
         return $product;
     }
 
-    public function delete(Product $product)
+    public function delete(Product $product): void
     {
-        return $product->delete();
+        $product->delete();
     }
+
+    // Remove the deleteProduct() method
 
     public function updateStock(Product $product, int $stock)
     {

@@ -73,9 +73,11 @@
                                                 @endif
                                                 <div class="ml-4">
                                                     <div class="text-sm font-medium text-gray-900">
-                                                        {{ $product->name }}</div>
+                                                        {{ $product->name }}
+                                                    </div>
                                                     <div class="text-sm text-gray-500 truncate max-w-xs">
-                                                        {{ $product->description }}</div>
+                                                        {{ $product->description }}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </td>
@@ -86,7 +88,7 @@
                                             ${{ number_format($product->price, 2) }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            <span id="available-stock-{{ $product->id }}">Loading...</span>
+                                            <span id="available-stock-{{ $product->id }}">{{ $product->stock }}</span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <div class="flex justify-center items-center space-x-2">
@@ -168,23 +170,27 @@
 
     @push('scripts')
     <script>
-    function updateAvailableStock(productId) {
-        fetch('/product/' + productId + '/available-stock')
-            .then(response => response.json())
-            .then(data => {
-                let stockElem = document.getElementById('available-stock-' + productId);
-                if (data.available_stock > 0) {
-                    stockElem.textContent = 'In Stock: ' + data.available_stock;
-                } else {
-                    stockElem.textContent = 'Out of Stock';
+        function updateAvailableStock(productId) {
+            fetch('/product/' + productId + '/available-stock')
+                .then(response => response.json())
+                .then(data => {
+                    let stockElem = document.getElementById('available-stock-' + productId);
+                    if (data.available_stock > 0) {
+                        stockElem.textContent = 'In Stock: ' + data.available_stock;
+                    } else {
+                        stockElem.textContent = 'Out of Stock';
+                    }
+                });
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            @foreach($products as $product)
+            updateAvailableStock({
+                {
+                    $product - > id
                 }
             });
-    }
-    document.addEventListener('DOMContentLoaded', function() {
-        @foreach ($products as $product)
-            updateAvailableStock({{ $product->id }});
-        @endforeach
-    });
+            @endforeach
+        });
     </script>
-@endpush
+    @endpush
 </x-app-layout>

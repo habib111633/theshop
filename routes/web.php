@@ -17,6 +17,7 @@ use App\Http\Controllers\DashboardController;
 use App\Models\Category;
 use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\Auth\GoogleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -92,6 +93,9 @@ Route::get('/users/{user}/conversations/{conversation}/messages', [UserControlle
 |--------------------------------------------------------------------------
 */
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook']);
+
+Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
 // Admin routes moved to routes/admin.php
 // Customer routes moved to routes/customer.php

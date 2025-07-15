@@ -13,6 +13,6 @@ interface ProductRepositoryInterface
     public function filter(array $criteria, $sort, $perPage);
     public function create(array $data);
     public function update(Product $product, array $data);
-    public function delete(Product $product);
+    public function delete(Product $product): void;
     public function updateStock(Product $product, int $stock);
-} 
+}

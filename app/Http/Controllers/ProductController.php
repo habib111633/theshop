@@ -93,7 +93,7 @@ try {
     return redirect()->route('admin.products.index')
         ->with('success', 'Product updated successfully!');
 } catch (\Exception $e) {
-    return redirect()->route('products.index')
+            return redirect()->route('admin.products.index')
         ->with('error', 'Failed to update product: ' . $e->getMessage());
 }
 
@@ -107,10 +107,10 @@ try {
         //
         try{
             $this->productService->deleteProduct($product);
-            return redirect()->route('products.index')
+            return redirect()->route('admin.products.index')
                 ->with('success', 'Product deleted successfully!');
         } catch (\Exception $e) {
-            return redirect()->route('products.index')
+            return redirect()->route('admin.products.index')
                 ->with('error', 'Failed to delete product: ' . $e->getMessage());
         }
     }
